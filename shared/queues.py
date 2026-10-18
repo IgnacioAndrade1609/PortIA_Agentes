@@ -23,6 +23,12 @@ async def declarar_colas(channel: aio_pika.abc.AbstractChannel) -> dict[str, aio
                 "x-dead-letter-routing-key": dlq_routing_key,
             },
         )
+
+        exchange_mass_transit = await channel.declare_exchange(
+            nombre, aio_pika.ExchangeType.FANOUT, durable=True
+        )
+        await cola.bind(exchange_mass_transit)
+
         colas[nombre] = cola
 
     return colas

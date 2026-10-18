@@ -1,0 +1,1829 @@
+{
+  "schema_name": "DoclingDocument",
+  "version": "1.10.0",
+  "name": "documento_prueba",
+  "origin": {
+    "mimetype": "application/pdf",
+    "binary_hash": 2212237808681851184,
+    "filename": "documento_prueba.pdf"
+  },
+  "furniture": {
+    "self_ref": "#/furniture",
+    "children": [],
+    "content_layer": "furniture",
+    "name": "_root_",
+    "label": "unspecified"
+  },
+  "body": {
+    "self_ref": "#/body",
+    "children": [
+      {
+        "$ref": "#/groups/0"
+      }
+    ],
+    "content_layer": "body",
+    "name": "_root_",
+    "label": "unspecified"
+  },
+  "groups": [
+    {
+      "self_ref": "#/groups/0",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/0"
+        },
+        {
+          "$ref": "#/texts/1"
+        },
+        {
+          "$ref": "#/texts/2"
+        },
+        {
+          "$ref": "#/texts/3"
+        },
+        {
+          "$ref": "#/texts/4"
+        },
+        {
+          "$ref": "#/texts/5"
+        },
+        {
+          "$ref": "#/texts/6"
+        },
+        {
+          "$ref": "#/texts/7"
+        },
+        {
+          "$ref": "#/texts/8"
+        },
+        {
+          "$ref": "#/texts/9"
+        },
+        {
+          "$ref": "#/texts/10"
+        },
+        {
+          "$ref": "#/texts/11"
+        },
+        {
+          "$ref": "#/texts/12"
+        },
+        {
+          "$ref": "#/texts/13"
+        },
+        {
+          "$ref": "#/texts/14"
+        },
+        {
+          "$ref": "#/texts/15"
+        },
+        {
+          "$ref": "#/texts/16"
+        },
+        {
+          "$ref": "#/texts/17"
+        },
+        {
+          "$ref": "#/texts/18"
+        },
+        {
+          "$ref": "#/texts/19"
+        },
+        {
+          "$ref": "#/texts/20"
+        },
+        {
+          "$ref": "#/texts/21"
+        },
+        {
+          "$ref": "#/texts/22"
+        },
+        {
+          "$ref": "#/texts/23"
+        },
+        {
+          "$ref": "#/texts/24"
+        },
+        {
+          "$ref": "#/texts/25"
+        },
+        {
+          "$ref": "#/texts/26"
+        },
+        {
+          "$ref": "#/texts/27"
+        },
+        {
+          "$ref": "#/texts/28"
+        },
+        {
+          "$ref": "#/texts/29"
+        },
+        {
+          "$ref": "#/texts/30"
+        },
+        {
+          "$ref": "#/texts/31"
+        },
+        {
+          "$ref": "#/groups/1"
+        },
+        {
+          "$ref": "#/texts/34"
+        },
+        {
+          "$ref": "#/texts/35"
+        },
+        {
+          "$ref": "#/groups/2"
+        },
+        {
+          "$ref": "#/texts/38"
+        },
+        {
+          "$ref": "#/texts/39"
+        },
+        {
+          "$ref": "#/texts/40"
+        },
+        {
+          "$ref": "#/texts/41"
+        },
+        {
+          "$ref": "#/texts/42"
+        },
+        {
+          "$ref": "#/texts/43"
+        },
+        {
+          "$ref": "#/groups/3"
+        },
+        {
+          "$ref": "#/texts/50"
+        },
+        {
+          "$ref": "#/groups/4"
+        },
+        {
+          "$ref": "#/texts/52"
+        },
+        {
+          "$ref": "#/texts/53"
+        },
+        {
+          "$ref": "#/texts/54"
+        },
+        {
+          "$ref": "#/texts/55"
+        }
+      ],
+      "content_layer": "body",
+      "name": "group",
+      "label": "form_area"
+    },
+    {
+      "self_ref": "#/groups/1",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/32"
+        },
+        {
+          "$ref": "#/texts/33"
+        }
+      ],
+      "content_layer": "body",
+      "name": "list",
+      "label": "list"
+    },
+    {
+      "self_ref": "#/groups/2",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/36"
+        },
+        {
+          "$ref": "#/texts/37"
+        }
+      ],
+      "content_layer": "body",
+      "name": "list",
+      "label": "list"
+    },
+    {
+      "self_ref": "#/groups/3",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/44"
+        },
+        {
+          "$ref": "#/texts/45"
+        },
+        {
+          "$ref": "#/texts/46"
+        },
+        {
+          "$ref": "#/texts/47"
+        },
+        {
+          "$ref": "#/texts/48"
+        },
+        {
+          "$ref": "#/texts/49"
+        }
+      ],
+      "content_layer": "body",
+      "name": "list",
+      "label": "list"
+    },
+    {
+      "self_ref": "#/groups/4",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/51"
+        }
+      ],
+      "content_layer": "body",
+      "name": "list",
+      "label": "list"
+    }
+  ],
+  "texts": [
+    {
+      "self_ref": "#/texts/0",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 816.5784257500001,
+            "r": 190.82526974999996,
+            "b": 810.71417575,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            47
+          ]
+        }
+      ],
+      "orig": "1. SHIPPER/EXPORTER (COMPLETE NAME AND ADDRESS)",
+      "text": "1. SHIPPER/EXPORTER (COMPLETE NAME AND ADDRESS)"
+    },
+    {
+      "self_ref": "#/texts/1",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 809.8738945,
+            "r": 153.34251975,
+            "b": 781.8763945000001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            56
+          ]
+        }
+      ],
+      "orig": "Ingrid Retamal Casanova EIRL José Oyarzo 14 Arica, Chile",
+      "text": "Ingrid Retamal Casanova EIRL José Oyarzo 14 Arica, Chile"
+    },
+    {
+      "self_ref": "#/texts/2",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 780.37375022275,
+            "r": 109.41917669999991,
+            "b": 772.216482475,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            19
+          ]
+        }
+      ],
+      "orig": "R.U.T.: 5.224.115-4",
+      "text": "R.U.T.: 5.224.115-4"
+    },
+    {
+      "self_ref": "#/texts/3",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 764.22842575,
+            "r": 171.34251975,
+            "b": 729.5263945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            117
+          ]
+        }
+      ],
+      "orig": "2. CONSIGNEE (COMPLETE NAME AND ADDRESS) Hernández, Sepúlveda y Ríos S.A. Av. René Aguirre 5 Piso 93 Los Angeles, USA",
+      "text": "2. CONSIGNEE (COMPLETE NAME AND ADDRESS) Hernández, Sepúlveda y Ríos S.A. Av. René Aguirre 5 Piso 93 Los Angeles, USA"
+    },
+    {
+      "self_ref": "#/texts/4",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 711.87842575,
+            "r": 174.18501974999998,
+            "b": 677.1763945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            95
+          ]
+        }
+      ],
+      "orig": "3. NOTIFY PARTY (COMPLETE NAME AND ADDRESS) Díaz SPA Calle Silvana Campos 5212 Hong Kong, China",
+      "text": "3. NOTIFY PARTY (COMPLETE NAME AND ADDRESS) Díaz SPA Calle Silvana Campos 5212 Hong Kong, China"
+    },
+    {
+      "self_ref": "#/texts/5",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 658.77842575,
+            "r": 80.80326974999991,
+            "b": 652.91417575,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            15
+          ]
+        }
+      ],
+      "orig": "PRE-CARRIAGE BY",
+      "text": "PRE-CARRIAGE BY"
+    },
+    {
+      "self_ref": "#/texts/6",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 652.0738945,
+            "r": 117.34251975000001,
+            "b": 643.5763945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            20
+          ]
+        }
+      ],
+      "orig": "TRUCK - SANTIAGO HUB",
+      "text": "TRUCK - SANTIAGO HUB"
+    },
+    {
+      "self_ref": "#/texts/7",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 623.52842575,
+            "r": 82.5470197499999,
+            "b": 608.3263945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            25
+          ]
+        }
+      ],
+      "orig": "PLACE OF RECEIPT Arica CY",
+      "text": "PLACE OF RECEIPT Arica CY"
+    },
+    {
+      "self_ref": "#/texts/8",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 165.11515725,
+            "t": 658.77842575,
+            "r": 238.44640725000028,
+            "b": 643.5763945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            33
+          ]
+        }
+      ],
+      "orig": "OCEAN VESSEL / VOYAGE MV PPV-PQoT",
+      "text": "OCEAN VESSEL / VOYAGE MV PPV-PQoT"
+    },
+    {
+      "self_ref": "#/texts/9",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 165.11515725,
+            "t": 642.07375022275,
+            "r": 255.83146229999988,
+            "b": 633.9164824750001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            21
+          ]
+        }
+      ],
+      "orig": "V. 1232N · [GR] LINER",
+      "text": "V. 1232N · [GR] LINER"
+    },
+    {
+      "self_ref": "#/texts/10",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 211.03937025,
+            "t": 623.52842575,
+            "r": 278.53937025,
+            "b": 608.3263945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            33
+          ]
+        }
+      ],
+      "orig": "FINAL DESTINATION Shanghai, China",
+      "text": "FINAL DESTINATION Shanghai, China"
+    },
+    {
+      "self_ref": "#/texts/11",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "section_header",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 324.4704915,
+            "t": 810.1496425,
+            "r": 543.9144915,
+            "b": 789.7556425,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            17
+          ]
+        }
+      ],
+      "orig": "ANDES CARRIER CO.",
+      "text": "ANDES CARRIER CO.",
+      "level": 1
+    },
+    {
+      "self_ref": "#/texts/12",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 353.801058,
+            "t": 790.9485647500001,
+            "r": 515.5190579999992,
+            "b": 784.1505647500001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            53
+          ]
+        }
+      ],
+      "orig": "O C E A N T R A N S P O R T · B I L L O F L A D I N G",
+      "text": "O C E A N T R A N S P O R T · B I L L O F L A D I N G"
+    },
+    {
+      "self_ref": "#/texts/13",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 770.07842575,
+            "r": 408.80954550000035,
+            "b": 754.8763945000001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            47
+          ]
+        }
+      ],
+      "orig": "BILL OF LADING NO. / TYPE OF MOVE VV-2010-00602",
+      "text": "BILL OF LADING NO. / TYPE OF MOVE VV-2010-00602"
+    },
+    {
+      "self_ref": "#/texts/14",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 753.37375022275,
+            "r": 354.7256840999999,
+            "b": 745.216482475,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            12
+          ]
+        }
+      ],
+      "orig": "FCL/FCL · PP",
+      "text": "FCL/FCL · PP"
+    },
+    {
+      "self_ref": "#/texts/15",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 735.5784257500001,
+            "r": 388.38779550000004,
+            "b": 720.3763945000001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            37
+          ]
+        }
+      ],
+      "orig": "EXPORT REFERENCES PO-6529 / INV-23166",
+      "text": "EXPORT REFERENCES PO-6529 / INV-23166"
+    },
+    {
+      "self_ref": "#/texts/16",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 718.87375022275,
+            "r": 376.3248043499999,
+            "b": 710.716482475,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            17
+          ]
+        }
+      ],
+      "orig": "DAP · 07-AUG-2026",
+      "text": "DAP · 07-AUG-2026"
+    },
+    {
+      "self_ref": "#/texts/17",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 701.07842575,
+            "r": 429.0025454999999,
+            "b": 695.21417575,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            35
+          ]
+        }
+      ],
+      "orig": "FORWARDING AGENT (NAME AND ADDRESS)",
+      "text": "FORWARDING AGENT (NAME AND ADDRESS)"
+    },
+    {
+      "self_ref": "#/texts/18",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 694.3738945,
+            "r": 424.38779550000004,
+            "b": 666.3763945000001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            72
+          ]
+        }
+      ],
+      "orig": "Club Castillo y Castro S.A. Camino María Herrera 7726 San Antonio, Chile",
+      "text": "Club Castillo y Castro S.A. Camino María Herrera 7726 San Antonio, Chile"
+    },
+    {
+      "self_ref": "#/texts/19",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 658.77842575,
+            "r": 396.0580455000004,
+            "b": 643.5763945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            33
+          ]
+        }
+      ],
+      "orig": "PORT OF LOADING [UN/LOCODE] Arica",
+      "text": "PORT OF LOADING [UN/LOCODE] Arica"
+    },
+    {
+      "self_ref": "#/texts/20",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 642.07375022275,
+            "r": 333.12656384999997,
+            "b": 633.9164824750001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            7
+          ]
+        }
+      ],
+      "orig": "[CLARI]",
+      "text": "[CLARI]"
+    },
+    {
+      "self_ref": "#/texts/21",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 440.660433,
+            "t": 658.77842575,
+            "r": 541.7229329999988,
+            "b": 652.91417575,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            29
+          ]
+        }
+      ],
+      "orig": "PORT OF DISCHARGE [UN/LOCODE]",
+      "text": "PORT OF DISCHARGE [UN/LOCODE]"
+    },
+    {
+      "self_ref": "#/texts/22",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 440.660433,
+            "t": 652.0738945,
+            "r": 530.660433,
+            "b": 643.5763945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            20
+          ]
+        }
+      ],
+      "orig": "Busan, Corea del Sur",
+      "text": "Busan, Corea del Sur"
+    },
+    {
+      "self_ref": "#/texts/23",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 440.660433,
+            "t": 642.07375022275,
+            "r": 470.89920134999994,
+            "b": 633.9164824750001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            7
+          ]
+        }
+      ],
+      "orig": "[KRPUS]",
+      "text": "[KRPUS]"
+    },
+    {
+      "self_ref": "#/texts/24",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 394.73622075000003,
+            "t": 623.52842575,
+            "r": 500.4772207499987,
+            "b": 608.3263945,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            51
+          ]
+        }
+      ],
+      "orig": "CONTAINER OPERATOR / EQUIPMENT SHIPPER OWNER · 45P1",
+      "text": "CONTAINER OPERATOR / EQUIPMENT SHIPPER OWNER · 45P1"
+    },
+    {
+      "self_ref": "#/texts/25",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 26.59251975,
+            "t": 588.49580875,
+            "r": 79.08726975,
+            "b": 582.6315587500001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            15
+          ]
+        }
+      ],
+      "orig": "MARKS & NUMBERS",
+      "text": "MARKS & NUMBERS"
+    },
+    {
+      "self_ref": "#/texts/26",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 136.66062975,
+            "t": 588.49580875,
+            "r": 199.27212974999998,
+            "b": 582.6315587500001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            18
+          ]
+        }
+      ],
+      "orig": "NUMBER OF PACKAGES",
+      "text": "NUMBER OF PACKAGES"
+    },
+    {
+      "self_ref": "#/texts/27",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 246.72874050000001,
+            "t": 588.49580875,
+            "r": 312.3642405,
+            "b": 582.6315587500001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            20
+          ]
+        }
+      ],
+      "orig": "DESCRIPTION OF GOODS",
+      "text": "DESCRIPTION OF GOODS"
+    },
+    {
+      "self_ref": "#/texts/28",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 356.7968505,
+            "t": 588.49580875,
+            "r": 414.55210050000005,
+            "b": 582.6315587500001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            18
+          ]
+        }
+      ],
+      "orig": "GROSS WEIGHT (KGS)",
+      "text": "GROSS WEIGHT (KGS)"
+    },
+    {
+      "self_ref": "#/texts/29",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 466.86496050000005,
+            "t": 588.49580875,
+            "r": 524.8984604999999,
+            "b": 582.6315587500001,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            17
+          ]
+        }
+      ],
+      "orig": "MEASUREMENT (CBM)",
+      "text": "MEASUREMENT (CBM)"
+    },
+    {
+      "self_ref": "#/texts/30",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 26.59251975,
+            "t": 577.38525025,
+            "r": 99.26751975000002,
+            "b": 545.09875825,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            59
+          ]
+        }
+      ],
+      "orig": "WHZU9161995 SEAL: 9536347 STATUS: FCL/FCL yxdF-AyNW / N° 01",
+      "text": "WHZU9161995 SEAL: 9536347 STATUS: FCL/FCL yxdF-AyNW / N° 01"
+    },
+    {
+      "self_ref": "#/texts/31",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 26.59251975,
+            "t": 539.850094,
+            "r": 99.26751975000002,
+            "b": 531.777469,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            17
+          ]
+        }
+      ],
+      "orig": "EOFI-fxIq / N° 02",
+      "text": "EOFI-fxIq / N° 02"
+    },
+    {
+      "self_ref": "#/texts/32",
+      "parent": {
+        "$ref": "#/groups/1"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 136.66062975,
+            "t": 577.38525025,
+            "r": 145.21062974999998,
+            "b": 569.31262525,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            2
+          ]
+        }
+      ],
+      "orig": "16",
+      "text": "16",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/33",
+      "parent": {
+        "$ref": "#/groups/1"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 136.66062975,
+            "t": 568.12669172275,
+            "r": 153.75975,
+            "b": 561.668923975,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "CAJAS",
+      "text": "CAJAS",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/34",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 136.66062975,
+            "t": 539.850094,
+            "r": 140.93562974999998,
+            "b": 531.777469,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "9",
+      "text": "9"
+    },
+    {
+      "self_ref": "#/texts/35",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 26.59251975,
+            "t": 510.386227,
+            "r": 47.96751975000001,
+            "b": 502.313602,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "TOTAL",
+      "text": "TOTAL"
+    },
+    {
+      "self_ref": "#/texts/36",
+      "parent": {
+        "$ref": "#/groups/2"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 136.66062975,
+            "t": 530.59153547275,
+            "r": 153.75975,
+            "b": 524.133767725,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "CAJAS",
+      "text": "CAJAS",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/37",
+      "parent": {
+        "$ref": "#/groups/2"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 136.66062975,
+            "t": 510.386227,
+            "r": 145.21062974999998,
+            "b": 502.313602,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            2
+          ]
+        }
+      ],
+      "orig": "25",
+      "text": "25",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/38",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 27.34251975,
+            "t": 488.02159,
+            "r": 74.37051974999993,
+            "b": 472.81955875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            21
+          ]
+        }
+      ],
+      "orig": "OCEAN FREIGHT PREPAID",
+      "text": "OCEAN FREIGHT PREPAID"
+    },
+    {
+      "self_ref": "#/texts/39",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 165.11515725,
+            "t": 488.02159,
+            "r": 198.70615725000005,
+            "b": 472.81955875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            18
+          ]
+        }
+      ],
+      "orig": "THC ORIGIN COLLECT",
+      "text": "THC ORIGIN COLLECT"
+    },
+    {
+      "self_ref": "#/texts/40",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 246.72874050000001,
+            "t": 577.38525025,
+            "r": 340.7787404999998,
+            "b": 553.17004675,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            52
+          ]
+        }
+      ],
+      "orig": "Vino tinto embotellado en cajas de cartón (12x750ml)",
+      "text": "Vino tinto embotellado en cajas de cartón (12x750ml)"
+    },
+    {
+      "self_ref": "#/texts/41",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 246.72874050000001,
+            "t": 539.850094,
+            "r": 340.7787404999998,
+            "b": 515.6348905,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            52
+          ]
+        }
+      ],
+      "orig": "Vino tinto embotellado en cajas de cartón (12x750ml)",
+      "text": "Vino tinto embotellado en cajas de cartón (12x750ml)"
+    },
+    {
+      "self_ref": "#/texts/42",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 246.72874050000001,
+            "t": 510.386227,
+            "r": 323.67874049999983,
+            "b": 494.24231275,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            30
+          ]
+        }
+      ],
+      "orig": "WHZU9161995 · Vino Embotellado",
+      "text": "WHZU9161995 · Vino Embotellado"
+    },
+    {
+      "self_ref": "#/texts/43",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 302.8877955,
+            "t": 488.02159,
+            "r": 354.4900455000002,
+            "b": 472.81955875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            23
+          ]
+        }
+      ],
+      "orig": "THC DESTINATION PREPAID",
+      "text": "THC DESTINATION PREPAID"
+    },
+    {
+      "self_ref": "#/texts/44",
+      "parent": {
+        "$ref": "#/groups/3"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 424.40792925000005,
+            "t": 577.38525025,
+            "r": 458.6079292500003,
+            "b": 569.31262525,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            8
+          ]
+        }
+      ],
+      "orig": "5,247.86",
+      "text": "5,247.86",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/45",
+      "parent": {
+        "$ref": "#/groups/3"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 547.3036762500001,
+            "t": 577.38525025,
+            "r": 568.6786762500002,
+            "b": 569.31262525,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "13.05",
+      "text": "13.05",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/46",
+      "parent": {
+        "$ref": "#/groups/3"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 424.40792925000005,
+            "t": 539.850094,
+            "r": 458.6079292500003,
+            "b": 531.777469,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            8
+          ]
+        }
+      ],
+      "orig": "5,470.91",
+      "text": "5,470.91",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/47",
+      "parent": {
+        "$ref": "#/groups/3"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 547.3036762500001,
+            "t": 539.850094,
+            "r": 568.6786762500002,
+            "b": 531.777469,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "11.46",
+      "text": "11.46",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/48",
+      "parent": {
+        "$ref": "#/groups/3"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 420.13205025,
+            "t": 510.386227,
+            "r": 458.60705025000027,
+            "b": 502.313602,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            9
+          ]
+        }
+      ],
+      "orig": "10,718.77",
+      "text": "10,718.77",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/49",
+      "parent": {
+        "$ref": "#/groups/3"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 547.3036762500001,
+            "t": 510.386227,
+            "r": 568.6786762500002,
+            "b": 502.313602,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "24.51",
+      "text": "24.51",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/50",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 440.660433,
+            "t": 488.02159,
+            "r": 504.8244329999992,
+            "b": 482.15734000000003,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            20
+          ]
+        }
+      ],
+      "orig": "NO. OF ORIGINAL B/LS",
+      "text": "NO. OF ORIGINAL B/LS"
+    },
+    {
+      "self_ref": "#/texts/51",
+      "parent": {
+        "$ref": "#/groups/4"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "list_item",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 440.660433,
+            "t": 481.31705875,
+            "r": 503.660433,
+            "b": 472.81955875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            14
+          ]
+        }
+      ],
+      "orig": "5 / THREE-FIVE",
+      "text": "5 / THREE-FIVE",
+      "enumerated": false,
+      "marker": ""
+    },
+    {
+      "self_ref": "#/texts/52",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 26.59251975,
+            "t": 459.74328550000007,
+            "r": 441.870009749999,
+            "b": 452.0955355,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            106
+          ]
+        }
+      ],
+      "orig": "REMARKS / OBSERVACIONES: CLEAN ON BOARD / PORT OF LOADING CY - DOOR DELIVERY / 14 DAYS FREE TIME DEMURRAGE",
+      "text": "REMARKS / OBSERVACIONES: CLEAN ON BOARD / PORT OF LOADING CY - DOOR DELIVERY / 14 DAYS FREE TIME DEMURRAGE"
+    },
+    {
+      "self_ref": "#/texts/53",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 26.59251975,
+            "t": 438.86535925,
+            "r": 202.69251974999992,
+            "b": 396.61410925,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            836
+          ]
+        },
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 208.41437025,
+            "t": 438.86535925,
+            "r": 384.169370249999,
+            "b": 402.05160925,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            837,
+            1559
+          ]
+        }
+      ],
+      "orig": "RECEIVED by the Carrier from the Shipper in apparent good order and condition (unless otherwise noted herein) the total number or quantity of Containers or other packages or units stated in the box entitled \"Total Number of Containers/Packages\" on this Bill of Lading, said particulars of the goods as declared by the Shipper, to be carried subject to all the terms and conditions hereinafter contained and all terms and conditions of the Carrier's Applicable Tariff, which shall be deemed to be incorporated herein. The Carrier's liability shall in no event exceed the limits provided for by the Hague-Visby Rules or the Carrier's Applicable Tariff, whichever is the lesser, and in no event shall the Carrier be liable for any consequential or indirect loss or damage. Shipper warrants that the goods are packed in a manner adequate to withstand the ordinary risks of the intended carriage. Except as otherwise provided herein, this Bill of Lading shall have effect subject to the provisions of the Hague-Visby Rules. By accepting this Bill of Lading the Merchant agrees to be bound by all of its terms and conditions whether written, printed, stamped or incorporated on the front or reverse side hereof, as if all such terms and conditions had been signed by the Merchant. In witness whereof the number of original Bills of Lading stated below has been signed, one of which being accomplished the others to stand void. Freight and charges payable as stated and due at the place of receipt or delivery notwithstanding any custom or privilege to the contrary.",
+      "text": "RECEIVED by the Carrier from the Shipper in apparent good order and condition (unless otherwise noted herein) the total number or quantity of Containers or other packages or units stated in the box entitled \"Total Number of Containers/Packages\" on this Bill of Lading, said particulars of the goods as declared by the Shipper, to be carried subject to all the terms and conditions hereinafter contained and all terms and conditions of the Carrier's Applicable Tariff, which shall be deemed to be incorporated herein. The Carrier's liability shall in no event exceed the limits provided for by the Hague-Visby Rules or the Carrier's Applicable Tariff, whichever is the lesser, and in no event shall the Carrier be liable for any consequential or indirect loss or damage. Shipper warrants that the goods are packed in a manner adequate to withstand the ordinary risks of the intended carriage. Except as otherwise provided herein, this Bill of Lading shall have effect subject to the provisions of the Hague-Visby Rules. By accepting this Bill of Lading the Merchant agrees to be bound by all of its terms and conditions whether written, printed, stamped or incorporated on the front or reverse side hereof, as if all such terms and conditions had been signed by the Merchant. In witness whereof the number of original Bills of Lading stated below has been signed, one of which being accomplished the others to stand void. Freight and charges payable as stated and due at the place of receipt or delivery notwithstanding any custom or privilege to the contrary."
+    },
+    {
+      "self_ref": "#/texts/54",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 393.98622075000003,
+            "t": 439.27159000000006,
+            "r": 520.303230749999,
+            "b": 425.97077950000005,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            52
+          ]
+        }
+      ],
+      "orig": "PLACE AND DATE OF ISSUE SANTIAGO, CHILE, 07-AUG-2026",
+      "text": "PLACE AND DATE OF ISSUE SANTIAGO, CHILE, 07-AUG-2026"
+    },
+    {
+      "self_ref": "#/texts/55",
+      "parent": {
+        "$ref": "#/groups/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 436.31963099999996,
+            "t": 401.2170295000001,
+            "r": 526.3511310000002,
+            "b": 395.77165449999995,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            31
+          ]
+        }
+      ],
+      "orig": "SIGNED AS AGENT FOR THE CARRIER",
+      "text": "SIGNED AS AGENT FOR THE CARRIER"
+    }
+  ],
+  "pictures": [],
+  "tables": [],
+  "key_value_items": [],
+  "form_items": [],
+  "pages": {
+    "1": {
+      "size": {
+        "width": 595.275591,
+        "height": 841.889764
+      },
+      "page_no": 1
+    }
+  }
+}
