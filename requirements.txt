@@ -1,3 +1,6 @@
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 aio-pika==9.5.0
 annotated-doc==0.0.5
 annotated-types==0.8.0
@@ -15,9 +18,9 @@ tenacity==9.1.2
 typing-inspection==0.4.4
 typing_extensions==4.16.0
 uvicorn==0.53.0
-# requirements.txt
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.4.1+cpu
-torchvision==0.19.1+cpu
+
+torch==2.14.1+cpu
+torchvision==0.29.1+cpu
 docling==2.140.0
 easyocr==1.7.2
+pypdfium2==5.14.0

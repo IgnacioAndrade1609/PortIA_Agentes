@@ -2,3 +2,11 @@ venv/
 __pycache__/
 .venv/
 temp/
+
+# Configuración local (secretos); el ejemplo sí se versiona.
+.env
+
+# Cachés de modelos (Docling / Hugging Face / EasyOCR) y artefactos generados.
+.cache/
+.env.example
+
