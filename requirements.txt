@@ -21,3 +21,8 @@ torch==2.4.1+cpu
 torchvision==0.19.1+cpu
 docling==2.140.0
 easyocr==1.7.2
+
+playwright==1.49.1
+httpx==0.28.1
+pytest==8.3.4
+pytest-asyncio==0.25.2

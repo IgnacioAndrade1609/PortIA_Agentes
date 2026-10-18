@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     colas = await declarar_colas(channel)
 
     await agente_lector.start(colas["shipment_created"])
-    await agente_inspector.start(colas["inspect_container"])
+    await agente_inspector.start(colas["inspect_container"], channel)
 
     yield
     await connection.close()
