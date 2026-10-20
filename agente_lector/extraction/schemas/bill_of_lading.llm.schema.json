@@ -1,0 +1,558 @@
+{
+  "additionalProperties": false,
+  "description": "Datos de un Bill of Lading (conocimiento de embarque). Devuelve null en todo campo que no aparezca literalmente en el documento. No infieras, no corrijas y no completes: otro componente normaliza y valida los valores. Devuelve un objeto por BL.",
+  "properties": {
+    "agent": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "also_notify": {
+      "additionalProperties": false,
+      "description": "Segunda parte a notificar, si existe.",
+      "properties": {
+        "contacto": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "direccion": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identificador": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "nombre",
+        "direccion",
+        "identificador",
+        "contacto"
+      ],
+      "title": "ParteComercial",
+      "type": "object"
+    },
+    "bl_madre": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "bl_number": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "bl_type": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "booking_number": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "carrier_scac": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "codigo_verificacion": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "consignee": {
+      "additionalProperties": false,
+      "description": "Consignatario / importador.",
+      "properties": {
+        "contacto": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "direccion": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identificador": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "nombre",
+        "direccion",
+        "identificador",
+        "contacto"
+      ],
+      "title": "ParteComercial",
+      "type": "object"
+    },
+    "containers": {
+      "description": "Contenedores declarados.",
+      "items": {
+        "additionalProperties": false,
+        "description": "Contenedor declarado en el BL.",
+        "properties": {
+          "iso_type": {
+            "description": "Valor literal del documento; null si no aparece.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "number": {
+            "description": "Valor literal del documento; null si no aparece.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "seal": {
+            "description": "Valor literal del documento; null si no aparece.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "number",
+          "iso_type",
+          "seal"
+        ],
+        "title": "ContainerData",
+        "type": "object"
+      },
+      "title": "Containers",
+      "type": "array"
+    },
+    "country_of_origin": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "date_of_issue": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "demurrage_free_days": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "detention_free_days": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "document_type": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "eta": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "final_destination": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "folio": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "forwarder_name": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "freight_amount": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "freight_currency": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "freight_terms": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "goods_description": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gross_weight": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gross_weight_unit": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "marks_and_numbers": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notify_party": {
+      "additionalProperties": false,
+      "description": "Parte a notificar.",
+      "properties": {
+        "contacto": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "direccion": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identificador": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "nombre",
+        "direccion",
+        "identificador",
+        "contacto"
+      ],
+      "title": "ParteComercial",
+      "type": "object"
+    },
+    "numero_originales": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observations": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "operacion": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "packages_count": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "packages_type": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "place_of_delivery": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "place_of_issue": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "place_of_receipt": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "port_of_discharge": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "port_of_loading": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "port_of_transshipment": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "service_type": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "shipped_on_board_date": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "shipper": {
+      "additionalProperties": false,
+      "description": "Embarcador / exportador.",
+      "properties": {
+        "contacto": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "direccion": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identificador": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre": {
+          "description": "Valor literal del documento; null si no aparece.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "nombre",
+        "direccion",
+        "identificador",
+        "contacto"
+      ],
+      "title": "ParteComercial",
+      "type": "object"
+    },
+    "shipping_line": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "signed_by": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "vessel": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "volume": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "volume_unit": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "voyage_number": {
+      "description": "Valor literal del documento; null si no aparece.",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "document_type",
+    "bl_number",
+    "bl_madre",
+    "folio",
+    "codigo_verificacion",
+    "booking_number",
+    "bl_type",
+    "numero_originales",
+    "operacion",
+    "shipper",
+    "consignee",
+    "notify_party",
+    "also_notify",
+    "forwarder_name",
+    "agent",
+    "signed_by",
+    "shipping_line",
+    "carrier_scac",
+    "vessel",
+    "voyage_number",
+    "service_type",
+    "port_of_loading",
+    "port_of_discharge",
+    "port_of_transshipment",
+    "place_of_receipt",
+    "place_of_delivery",
+    "final_destination",
+    "country_of_origin",
+    "place_of_issue",
+    "date_of_issue",
+    "shipped_on_board_date",
+    "eta",
+    "goods_description",
+    "marks_and_numbers",
+    "packages_count",
+    "packages_type",
+    "gross_weight",
+    "gross_weight_unit",
+    "volume",
+    "volume_unit",
+    "containers",
+    "freight_terms",
+    "freight_amount",
+    "freight_currency",
+    "demurrage_free_days",
+    "detention_free_days",
+    "observations"
+  ],
+  "title": "BillOfLadingExtraido",
+  "type": "object"
+}

@@ -1,0 +1,392 @@
+{
+  "$defs": {
+    "Block": {
+      "description": "Unidad de contenido en orden de lectura.",
+      "properties": {
+        "bbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "layer": {
+          "$ref": "#/$defs/ContentLayer",
+          "default": "body"
+        },
+        "order": {
+          "title": "Order",
+          "type": "integer"
+        },
+        "page": {
+          "title": "Page",
+          "type": "integer"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/BlockType"
+        }
+      },
+      "required": [
+        "order",
+        "type",
+        "page"
+      ],
+      "title": "Block",
+      "type": "object"
+    },
+    "BlockType": {
+      "description": "Tipo de bloque en el orden de lectura del documento.",
+      "enum": [
+        "header",
+        "section_header",
+        "text",
+        "table",
+        "picture",
+        "footer",
+        "key_value"
+      ],
+      "title": "BlockType",
+      "type": "string"
+    },
+    "BoundingBox": {
+      "description": "Rectángulo normalizado a ``0..1`` respecto del tamaño de la página.",
+      "properties": {
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "BoundingBox",
+      "type": "object"
+    },
+    "ContentLayer": {
+      "description": "Capa de contenido de Docling (``body`` vs ``furniture``).",
+      "enum": [
+        "body",
+        "furniture"
+      ],
+      "title": "ContentLayer",
+      "type": "string"
+    },
+    "EngineInfo": {
+      "description": "Motor usado para producir el documento. Se guarda para poder comparar corridas.",
+      "properties": {
+        "docling_version": {
+          "default": "",
+          "title": "Docling Version",
+          "type": "string"
+        },
+        "elapsed_ms": {
+          "default": 0,
+          "title": "Elapsed Ms",
+          "type": "integer"
+        },
+        "lang": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lang",
+          "type": "array"
+        },
+        "ocr": {
+          "default": "",
+          "title": "Ocr",
+          "type": "string"
+        },
+        "ocr_used": {
+          "default": false,
+          "title": "Ocr Used",
+          "type": "boolean"
+        }
+      },
+      "title": "EngineInfo",
+      "type": "object"
+    },
+    "PageInfo": {
+      "description": "Geometría y densidad de texto de una página.",
+      "properties": {
+        "height": {
+          "title": "Height",
+          "type": "number"
+        },
+        "ocr_used": {
+          "default": false,
+          "title": "Ocr Used",
+          "type": "boolean"
+        },
+        "page_no": {
+          "title": "Page No",
+          "type": "integer"
+        },
+        "text_chars": {
+          "default": 0,
+          "title": "Text Chars",
+          "type": "integer"
+        },
+        "width": {
+          "title": "Width",
+          "type": "number"
+        }
+      },
+      "required": [
+        "page_no",
+        "width",
+        "height"
+      ],
+      "title": "PageInfo",
+      "type": "object"
+    },
+    "SourceInfo": {
+      "description": "Origen del archivo. ``sha256`` es la clave de idempotencia (no el ``binary_hash``).",
+      "properties": {
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "mime": {
+          "title": "Mime",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "default": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "filename",
+        "mime",
+        "sha256"
+      ],
+      "title": "SourceInfo",
+      "type": "object"
+    },
+    "TableCell": {
+      "description": "Celda reconstruida desde ``table_cells`` (nunca desde ``grid``).",
+      "properties": {
+        "bbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "c": {
+          "title": "C",
+          "type": "integer"
+        },
+        "colspan": {
+          "default": 1,
+          "title": "Colspan",
+          "type": "integer"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "r": {
+          "title": "R",
+          "type": "integer"
+        },
+        "rowspan": {
+          "default": 1,
+          "title": "Rowspan",
+          "type": "integer"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "r",
+        "c"
+      ],
+      "title": "TableCell",
+      "type": "object"
+    },
+    "TableData": {
+      "description": "Tabla reconstruida, deduplicada y con encabezado inferido.",
+      "properties": {
+        "cells": {
+          "items": {
+            "$ref": "#/$defs/TableCell"
+          },
+          "title": "Cells",
+          "type": "array"
+        },
+        "header_row_idx": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Header Row Idx"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "merged_from": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Merged From",
+          "type": "array"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "rows": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Rows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "TableData",
+      "type": "object"
+    },
+    "WarningCode": {
+      "description": "Avisos no bloqueantes del pipeline (enum cerrado para poder medirlos).",
+      "enum": [
+        "table_span_duplicated",
+        "multiple_tables_merged",
+        "no_header_detected",
+        "empty_cells",
+        "picture_text_filtered",
+        "furniture_kept",
+        "ocr_low_conf",
+        "ocr_skipped",
+        "empty_document",
+        "unusual_coord_origin"
+      ],
+      "title": "WarningCode",
+      "type": "string"
+    }
+  },
+  "description": "Capa 2: contrato interno versionado. Es la entrada del LLM y de los validadores.",
+  "properties": {
+    "blocks": {
+      "items": {
+        "$ref": "#/$defs/Block"
+      },
+      "title": "Blocks",
+      "type": "array"
+    },
+    "engine": {
+      "$ref": "#/$defs/EngineInfo"
+    },
+    "extractor_version": {
+      "description": "p. ej. 'docling@2.140.0+norm@1'.",
+      "title": "Extractor Version",
+      "type": "string"
+    },
+    "markdown": {
+      "default": "",
+      "description": "Documento completo en Markdown (entrada del LLM).",
+      "title": "Markdown",
+      "type": "string"
+    },
+    "pages": {
+      "items": {
+        "$ref": "#/$defs/PageInfo"
+      },
+      "title": "Pages",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "description": "Versión SemVer del esquema.",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceInfo"
+    },
+    "tables": {
+      "items": {
+        "$ref": "#/$defs/TableData"
+      },
+      "title": "Tables",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "$ref": "#/$defs/WarningCode"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "extractor_version",
+    "source"
+  ],
+  "title": "DocumentoNormalizado",
+  "type": "object"
+}

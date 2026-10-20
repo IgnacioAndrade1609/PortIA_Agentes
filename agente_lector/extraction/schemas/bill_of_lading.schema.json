@@ -1,0 +1,407 @@
+{
+  "$defs": {
+    "BoundingBox": {
+      "description": "Rectángulo normalizado a ``0..1`` respecto del tamaño de la página.",
+      "properties": {
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "BoundingBox",
+      "type": "object"
+    },
+    "CampoExtraido": {
+      "description": "Valor crudo de un campo, siempre ``str``, con su confianza y su evidencia.",
+      "properties": {
+        "confidence": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Valor tal como aparece en el documento.",
+          "title": "Value"
+        }
+      },
+      "title": "CampoExtraido",
+      "type": "object"
+    },
+    "ContainerData": {
+      "description": "Contenedor declarado en el BL.",
+      "properties": {
+        "iso_type": {
+          "$ref": "#/$defs/CampoExtraido",
+          "description": "Tipo ISO, p. ej. '45G0'."
+        },
+        "number": {
+          "$ref": "#/$defs/CampoExtraido",
+          "description": "Número de contenedor (ISO 6346)."
+        },
+        "seal": {
+          "$ref": "#/$defs/CampoExtraido",
+          "description": "Precinto / sello."
+        }
+      },
+      "title": "ContainerData",
+      "type": "object"
+    },
+    "Evidence": {
+      "description": "Trazabilidad de un valor: dónde y cómo aparece en el documento.",
+      "properties": {
+        "bbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "method": {
+          "$ref": "#/$defs/EvidenceMethod",
+          "default": "llm"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "text": {
+          "default": "",
+          "description": "Fragmento literal del documento.",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceMethod": {
+      "description": "Cómo se obtuvo el valor citado en la evidencia.",
+      "enum": [
+        "text_layer",
+        "ocr",
+        "llm",
+        "inferred"
+      ],
+      "title": "EvidenceMethod",
+      "type": "string"
+    },
+    "ParteComercial": {
+      "description": "Embarcador, consignatario, notificar o cualquier parte nombrada del BL.",
+      "properties": {
+        "contacto": {
+          "$ref": "#/$defs/CampoExtraido"
+        },
+        "direccion": {
+          "$ref": "#/$defs/CampoExtraido"
+        },
+        "identificador": {
+          "$ref": "#/$defs/CampoExtraido"
+        },
+        "nombre": {
+          "$ref": "#/$defs/CampoExtraido"
+        }
+      },
+      "title": "ParteComercial",
+      "type": "object"
+    },
+    "ReviewReason": {
+      "description": "Motivos por los que un documento debe ir a revisión humana.",
+      "enum": [
+        "grounding_failed",
+        "low_ocr",
+        "low_confidence",
+        "invalid_container_check_digit",
+        "date_ambiguous",
+        "port_ambiguous",
+        "missing_required_field",
+        "cross_check_mismatch",
+        "multiple_documents",
+        "empty_extraction"
+      ],
+      "title": "ReviewReason",
+      "type": "string"
+    },
+    "WarningCode": {
+      "description": "Avisos no bloqueantes del pipeline (enum cerrado para poder medirlos).",
+      "enum": [
+        "table_span_duplicated",
+        "multiple_tables_merged",
+        "no_header_detected",
+        "empty_cells",
+        "picture_text_filtered",
+        "furniture_kept",
+        "ocr_low_conf",
+        "ocr_skipped",
+        "empty_document",
+        "unusual_coord_origin"
+      ],
+      "title": "WarningCode",
+      "type": "string"
+    }
+  },
+  "description": "Capa 3: BL extraído. Todos los campos son opcionales; ``null`` = no aparece.\n\nEl LLM **no** rellena ``confidence`` ni ``evidence``: las calcula el pipeline\n(grounding + validadores + OCR). Ver ``llm_schema.esquema_para_llm()``.",
+  "properties": {
+    "agent": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Agente de naves o agente marítimo emisor."
+    },
+    "also_notify": {
+      "$ref": "#/$defs/ParteComercial",
+      "description": "Segunda parte a notificar, si existe."
+    },
+    "bl_madre": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Número del BL madre (master B/L)."
+    },
+    "bl_number": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Número del conocimiento de embarque (#BL / B/L No.)."
+    },
+    "bl_type": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Modalidad: original, telex release, straight, order, to bearer."
+    },
+    "booking_number": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Número de reserva (booking)."
+    },
+    "carrier_scac": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Código SCAC del transportista."
+    },
+    "codigo_verificacion": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Código de verificación impreso junto al folio."
+    },
+    "consignee": {
+      "$ref": "#/$defs/ParteComercial",
+      "description": "Consignatario / importador."
+    },
+    "containers": {
+      "description": "Contenedores declarados.",
+      "items": {
+        "$ref": "#/$defs/ContainerData"
+      },
+      "title": "Containers",
+      "type": "array"
+    },
+    "country_of_origin": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "País de origen de la mercancía."
+    },
+    "date_of_issue": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Fecha de emisión (ISO 8601 si es posible)."
+    },
+    "demurrage_free_days": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Días libres de demora (demurrage)."
+    },
+    "detention_free_days": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Días libres de detención (detention)."
+    },
+    "document_type": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Tipo de documento, p. ej. 'BL'."
+    },
+    "eta": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Fecha estimada de arribo (ISO 8601 si es posible)."
+    },
+    "final_destination": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Destino final de la mercancía."
+    },
+    "folio": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Folio del documento (Chile: folio de Aduanas)."
+    },
+    "forwarder_name": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Forwarder / agente de carga."
+    },
+    "freight_amount": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Monto del flete."
+    },
+    "freight_currency": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Moneda del flete."
+    },
+    "freight_terms": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Condición del flete: prepaid / collect."
+    },
+    "goods_description": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Descripción de la mercancía."
+    },
+    "gross_weight": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Peso bruto."
+    },
+    "gross_weight_unit": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Unidad del peso bruto (KGM)."
+    },
+    "marks_and_numbers": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Marcas y números."
+    },
+    "notify_party": {
+      "$ref": "#/$defs/ParteComercial",
+      "description": "Parte a notificar."
+    },
+    "numero_originales": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Cantidad de originales emitidos."
+    },
+    "observations": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Observaciones o instrucciones especiales."
+    },
+    "operacion": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Sentido de la operación: importación, exportación o tránsito."
+    },
+    "packages_count": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Cantidad de bultos."
+    },
+    "packages_type": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Tipo de bulto."
+    },
+    "place_of_delivery": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Lugar de entrega."
+    },
+    "place_of_issue": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Lugar de emisión del BL."
+    },
+    "place_of_receipt": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Lugar de recepción de la carga."
+    },
+    "port_of_discharge": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Puerto de descarga."
+    },
+    "port_of_loading": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Puerto de embarque."
+    },
+    "port_of_transshipment": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Puerto de transbordo."
+    },
+    "review_reasons": {
+      "items": {
+        "$ref": "#/$defs/ReviewReason"
+      },
+      "title": "Review Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "description": "Versión SemVer del esquema.",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "service_type": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Servicio o ruta, p. ej. 'LINER'."
+    },
+    "shipped_on_board_date": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Fecha de embarque a bordo."
+    },
+    "shipper": {
+      "$ref": "#/$defs/ParteComercial",
+      "description": "Embarcador / exportador."
+    },
+    "shipping_line": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Naviera / transportista marítimo."
+    },
+    "signed_by": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Nombre de quien firma el BL."
+    },
+    "vessel": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Nombre del buque."
+    },
+    "volume": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Volumen."
+    },
+    "volume_unit": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Unidad de volumen (MTQ)."
+    },
+    "voyage_number": {
+      "$ref": "#/$defs/CampoExtraido",
+      "description": "Número de viaje."
+    },
+    "warnings": {
+      "items": {
+        "$ref": "#/$defs/WarningCode"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "title": "BillOfLadingExtraido",
+  "type": "object"
+}
