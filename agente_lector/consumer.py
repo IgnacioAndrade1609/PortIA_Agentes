@@ -23,8 +23,9 @@ from shared.publisher import publish_event
 
 logger = logging.getLogger("portia.agente_lector")
 
-#: Routing key del contrato (ver EVENTOS.md, sección 3).
-ROUTING_KEY_DATA_EXTRACTED = "DataExtracted"
+#: MassTransit declara la cola del consumer como ``data_extracted``. Publicando al
+#: default exchange con esa routing key, el evento llega directo a la cola del Core.
+ROUTING_KEY_DATA_EXTRACTED = "data_extracted"
 
 
 async def on_message(

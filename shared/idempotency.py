@@ -34,6 +34,10 @@ from datetime import UTC, datetime
 from typing import Any, NamedTuple, Protocol
 
 import redis.asyncio as redis
+from dotenv import load_dotenv
+
+# Carga .env antes de crear el cliente: REDIS_URL debe estar disponible al importar.
+load_dotenv()
 
 logger = logging.getLogger("portia.idempotencia")
 
