@@ -1,3 +1,6 @@
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 aio-pika==9.5.0
 annotated-doc==0.0.5
 annotated-types==0.8.0
@@ -6,23 +9,21 @@ click==8.5.0
 fastapi==0.141.1
 h11==0.16.0
 idna==3.20
+numpy==2.4.6
+opencv-python-headless==5.0.0.93
 pydantic==2.13.5
 pydantic_core==2.46.5
 python-dotenv==1.1.1
 redis==8.1.0
+requests==2.34.2
 starlette==1.6.0
 tenacity==9.1.2
 typing-inspection==0.4.4
 typing_extensions==4.16.0
 uvicorn==0.53.0
-# requirements.txt
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.4.1+cpu
-torchvision==0.19.1+cpu
+
+torch==2.14.1+cpu
+torchvision==0.29.1+cpu
 docling==2.140.0
 easyocr==1.7.2
-
-playwright==1.49.1
-httpx==0.28.1
-pytest==8.3.4
-pytest-asyncio==0.25.2
+pypdfium2==5.14.0

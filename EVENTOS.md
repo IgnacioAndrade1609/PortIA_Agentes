@@ -8,6 +8,8 @@ Contrato de mensajería entre `PortIA_Core` y `PortIA_Agentes`, según `CONTEXTO
 - IDs: `int` (la BD usa `INT IDENTITY`, no UUID).
 - Versionado: campo agregado = retrocompatible. Campo eliminado/cambiado de tipo = nuevo evento `V2`, ambas versiones conviven durante la transición.
 - Idempotencia: cada evento se identifica por una clave natural (`document_id` / `container_id`) + hash SHA-256 del contenido, verificado contra Redis antes de procesar (ver `idempotency.py`).
+  - **Procesamiento:** `reclamar_trabajo()` toma el trabajo con `SET NX` (estado `en_proceso`); un duplicado concurrente no vuelve a ejecutar la extracción.
+  - **Respuesta:** `guardar_resultado()` deja los eventos ya calculados en Redis (`IDEMPOTENCY_TTL`, 24 h por defecto); un reintento del mismo mensaje republica esa respuesta sin llamar al LLM.
 
 Modelos Pydantic: `shared/events.py`.
 

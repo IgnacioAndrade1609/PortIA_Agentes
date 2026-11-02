@@ -1,0 +1,12 @@
+# Configuración de ruff para PortIA_Agentes.
+
+target-version = "py311"
+line-length = 110
+
+# POC de referencia del extractor (se reemplaza por docling_runner en la Fase 3).
+# No se lintea: es material histórico documentado en temp/EXTRACTOR_DOCLING.md.
+extend-exclude = ["agente_lector/extractor_testv1"]
+
+[lint.per-file-ignores]
+# Estilo previo del contrato de eventos: no se mezclan cambios cosméticos con el contrato.
+"shared/events.py" = ["UP045"]

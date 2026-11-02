@@ -24,10 +24,12 @@ async def declarar_colas(channel: aio_pika.abc.AbstractChannel) -> dict[str, aio
             },
         )
 
-        exchange_mass_transit = await channel.declare_exchange(
+        # El Core publica por MassTransit a un exchange fanout con el mismo nombre
+        # del evento. Se declara aquí de forma idempotente y se bindea la cola.
+        exchange = await channel.declare_exchange(
             nombre, aio_pika.ExchangeType.FANOUT, durable=True
         )
-        await cola.bind(exchange_mass_transit)
+        await cola.bind(exchange)
 
         colas[nombre] = cola
 
