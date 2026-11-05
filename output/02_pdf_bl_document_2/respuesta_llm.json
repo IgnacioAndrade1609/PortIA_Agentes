@@ -1,0 +1,100 @@
+{
+  "document_type": "BILL OF LADING",
+  "bl_number": "vO-2005-50037",
+  "bl_madre": null,
+  "folio": null,
+  "codigo_verificacion": null,
+  "booking_number": null,
+  "bl_type": "FCL/FCL · DOOR/DOOR",
+  "numero_originales": "4 / THREE-FOUR",
+  "operacion": "exportación",
+  "shipper": {
+    "nombre": "Cristian Oscar Oyarzún Zúñiga E.I.R.L.",
+    "direccion": "Calle Mario Silva 24 Dpto. 630 Puerto Montt, Chile",
+    "identificador": "R.U.T.: 55.761.163-0",
+    "contacto": null
+  },
+  "consignee": {
+    "nombre": "Corporación Rivera, Martínez y Toro SPA",
+    "direccion": "Avenida Francisco Bilbao 994 Hong Kong, China",
+    "identificador": null,
+    "contacto": null
+  },
+  "notify_party": {
+    "nombre": "Vásquez y Cortez S.A.",
+    "direccion": "Calle Juan Salazar 74 Dpto. 01 Guayaquil, Ecuador",
+    "identificador": null,
+    "contacto": null
+  },
+  "also_notify": {
+    "nombre": null,
+    "direccion": null,
+    "identificador": null,
+    "contacto": null
+  },
+  "forwarder_name": "Oyarzún y Salas Ltda.",
+  "agent": null,
+  "signed_by": null,
+  "shipping_line": "SOUTHERN CROSS SHIPPING",
+  "carrier_scac": null,
+  "vessel": "MV xwD-ODJZ",
+  "voyage_number": "V. 7943N · [PA] LINER",
+  "service_type": null,
+  "port_of_loading": "San Vicente",
+  "port_of_discharge": "Guayaquil, Ecuador",
+  "port_of_transshipment": null,
+  "place_of_receipt": "San Vicente CY",
+  "place_of_delivery": null,
+  "final_destination": "Long Beach, USA",
+  "country_of_origin": null,
+  "place_of_issue": "VALPARAÍSO, CHILE",
+  "date_of_issue": "06-AUG-2026",
+  "shipped_on_board_date": null,
+  "eta": null,
+  "goods_description": "Cítricos frescos (naranjas/limones) con ventilación forzada",
+  "marks_and_numbers": "UNYU1681810",
+  "packages_count": "27",
+  "packages_type": "PALLETS",
+  "gross_weight": "10,762.75",
+  "gross_weight_unit": "KGS",
+  "volume": "20.58",
+  "volume_unit": "CBM",
+  "containers": [
+    {
+      "number": "UNYU1681810",
+      "iso_type": null,
+      "seal": "2646861"
+    }
+  ],
+  "freight_terms": "COLLECT",
+  "freight_amount": null,
+  "freight_currency": null,
+  "demurrage_free_days": null,
+  "detention_free_days": null,
+  "observations": "CY/CY - FCL/FCL",
+  "evidencia": {
+    "bl_number": "BILL OF LADING NO. / TYPE OF MOVE vO-2005-50037",
+    "folio": null,
+    "codigo_verificacion": null,
+    "shipper.nombre": "Cristian Oscar Oyarzún Zúñiga E.I.R.L.",
+    "consignee.nombre": "Corporación Rivera, Martínez y Toro SPA",
+    "port_of_loading": "PORT OF LOADING [UN/LOCODE] San Vicente",
+    "port_of_discharge": "PORT OF DISCHARGE [UN/LOCODE] Guayaquil, Ecuador",
+    "vessel": "OCEAN VESSEL / VOYAGE MV xwD-ODJZ",
+    "voyage_number": "V. 7943N · [PA] LINER",
+    "eta": null,
+    "goods_description": "Cítricos frescos (naranjas/limones) con ventilación forzada",
+    "packages_count": "NUMBER OF PACKAGES 27",
+    "packages_type": "PALLETS",
+    "gross_weight": "GROSS WEIGHT (KGS) 10,762.75",
+    "gross_weight_unit": "KGS",
+    "containers[].number": "UNYU1681810"
+  },
+  "campos_no_encontrados": [
+    "folio",
+    "codigo_verificacion",
+    "vessel",
+    "voyage_number",
+    "eta"
+  ]
+}

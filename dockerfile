@@ -1,5 +1,15 @@
 FROM python:3.11-slim
 WORKDIR /app
+
+# PyTorch CPU necesita libgomp; el resto de dependencias llegan en wheels.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONUNBUFFERED=1 \
+    HF_HOME=/app/.cache/huggingface \
+    DOCLING_ARTIFACTS_PATH=/app/.cache/docling
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .

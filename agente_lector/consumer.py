@@ -2,6 +2,9 @@
 
 No contiene lógica de negocio — eso vive en service.py. Aquí solo se resuelve la
 **idempotencia** (procesamiento + respuesta) contra Redis antes de publicar.
+
+Un fallo no se publica: la excepción sube y aio-pika manda el mensaje a la DLQ
+(``shared/queues.py``). El Core solo recibe eventos cuando hay datos extraídos.
 """
 
 import logging

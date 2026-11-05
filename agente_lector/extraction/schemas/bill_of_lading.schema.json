@@ -213,6 +213,14 @@
       "$ref": "#/$defs/CampoExtraido",
       "description": "Número de reserva (booking)."
     },
+    "campos_no_encontrados": {
+      "description": "Identificadores de los campos clave que no aparecen en el documento.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Campos No Encontrados",
+      "type": "array"
+    },
     "carrier_scac": {
       "$ref": "#/$defs/CampoExtraido",
       "description": "Código SCAC del transportista."
@@ -353,7 +361,7 @@
       "type": "array"
     },
     "schema_version": {
-      "default": "1.0.0",
+      "default": "1.1.0",
       "description": "Versión SemVer del esquema.",
       "title": "Schema Version",
       "type": "string"

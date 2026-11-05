@@ -15,6 +15,12 @@ Solución
 3. Endurecerlo al formato que exigen los *structured outputs* estrictos:
    ``additionalProperties: false`` y ``required`` con todas las propiedades (como todo es
    ``null``-able, el modelo puede devolver ``null`` sin violar el contrato).
+4. Agregar los dos bloques de **cumplimiento verificable**: ``evidencia`` (cita literal del
+   documento para cada campo clave) y ``campos_no_encontrados`` (declaración explícita de lo
+   que no aparece). Sin ellos, un campo en ``null`` es ambiguo: no se distingue "no viene en
+   el documento" de "el modelo lo omitió". El validador de
+   :func:`agente_lector.extraction.llm_extractor.verificar_contrato` es quien convierte estas
+   dos declaraciones en una garantía; el schema por sí solo no puede.
 
 Uso::
 
@@ -26,10 +32,33 @@ from typing import Any
 
 from agente_lector.extraction.schemas import BillOfLadingExtraido
 
-__all__ = ["esquema_para_llm"]
+__all__ = ["CAMPOS_CLAVE", "esquema_para_llm"]
 
-#: Campos de metadata que el LLM no debe emitir (los pone el pipeline).
-_CAMPOS_METADATA = ("schema_version", "warnings", "review_reasons")
+#: Campos que el negocio exige en todo BL. Se usan en tres lugares a la vez:
+#: el ``enum`` de ``campos_no_encontrados``, las claves obligatorias de ``evidencia`` y el
+#: gate de cobertura de ``verificar_contrato``. Una sola fuente de verdad: si se agrega aquí,
+#: se exige en los tres.
+CAMPOS_CLAVE: tuple[str, ...] = (
+    "bl_number",
+    "folio",
+    "codigo_verificacion",
+    "shipper.nombre",
+    "consignee.nombre",
+    "port_of_loading",
+    "port_of_discharge",
+    "vessel",
+    "voyage_number",
+    "eta",
+    "goods_description",
+    "packages_count",
+    "packages_type",
+    "gross_weight",
+    "gross_weight_unit",
+    "containers[].number",
+)
+
+#: Campos de metadata que el LLM no debe emitir con la forma del dominio (los pone el pipeline).
+_CAMPOS_METADATA = ("schema_version", "warnings", "review_reasons", "campos_no_encontrados")
 
 _DESCRIPCION_VALOR = "Valor literal del documento; null si no aparece."
 
@@ -38,6 +67,18 @@ _DESCRIPCION_RAIZ = (
     "Datos de un Bill of Lading (conocimiento de embarque). Devuelve null en todo campo que "
     "no aparezca literalmente en el documento. No infieras, no corrijas y no completes: otro "
     "componente normaliza y valida los valores. Devuelve un objeto por BL."
+)
+
+_DESCRIPCION_EVIDENCIA = (
+    "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de "
+    "`{campo}`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo "
+    "parafrasees: se verifica contra el documento y una cita que no existe invalida el campo."
+)
+
+_DESCRIPCION_FALTANTES = (
+    "Identificadores de los campos clave que NO aparecen en el documento. Debes listar aquí "
+    "todo campo clave que hayas devuelto como null; es lo que distingue 'no viene en el "
+    "documento' de 'no lo busqué'. Usa exactamente los valores del enum."
 )
 
 
@@ -94,7 +135,37 @@ def esquema_para_llm() -> dict:
     propiedades = esquema.get("properties", {})
     for nombre in _CAMPOS_METADATA:
         propiedades.pop(nombre, None)
+
+    # Bloques de cumplimiento: el modelo debe citar y debe declarar lo que falta.
+    propiedades["evidencia"] = _bloque_evidencia()
+    propiedades["campos_no_encontrados"] = _bloque_faltantes()
+
     esquema["properties"] = propiedades
     esquema["description"] = _DESCRIPCION_RAIZ
 
     return _endurecer(esquema)
+
+
+def _bloque_evidencia() -> dict:
+    """Cita literal obligatoria por campo clave (una propiedad por cada uno)."""
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "description": (
+            "Fragmento literal del documento por cada campo clave. Es la prueba que el "
+            "validador contrasta contra el texto: si la cita no existe, el campo se descarta."
+        ),
+        "properties": {
+            clave: {"type": ["string", "null"], "description": _DESCRIPCION_EVIDENCIA.format(campo=clave)}
+            for clave in CAMPOS_CLAVE
+        },
+    }
+
+
+def _bloque_faltantes() -> dict:
+    """Declaración explícita de los campos clave que no aparecen en el documento."""
+    return {
+        "type": "array",
+        "description": _DESCRIPCION_FALTANTES,
+        "items": {"type": "string", "enum": list(CAMPOS_CLAVE)},
+    }
