@@ -79,6 +79,31 @@
         "null"
       ]
     },
+    "campos_no_encontrados": {
+      "description": "Identificadores de los campos clave que NO aparecen en el documento. Debes listar aquí todo campo clave que hayas devuelto como null; es lo que distingue 'no viene en el documento' de 'no lo busqué'. Usa exactamente los valores del enum.",
+      "items": {
+        "enum": [
+          "bl_number",
+          "folio",
+          "codigo_verificacion",
+          "shipper.nombre",
+          "consignee.nombre",
+          "port_of_loading",
+          "port_of_discharge",
+          "vessel",
+          "voyage_number",
+          "eta",
+          "goods_description",
+          "packages_count",
+          "packages_type",
+          "gross_weight",
+          "gross_weight_unit",
+          "containers[].number"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
     "carrier_scac": {
       "description": "Valor literal del documento; null si no aparece.",
       "type": [
@@ -215,6 +240,143 @@
         "string",
         "null"
       ]
+    },
+    "evidencia": {
+      "additionalProperties": false,
+      "description": "Fragmento literal del documento por cada campo clave. Es la prueba que el validador contrasta contra el texto: si la cita no existe, el campo se descarta.",
+      "properties": {
+        "bl_number": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `bl_number`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "codigo_verificacion": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `codigo_verificacion`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "consignee.nombre": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `consignee.nombre`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "containers[].number": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `containers[].number`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "eta": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `eta`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "folio": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `folio`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "goods_description": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `goods_description`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gross_weight": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `gross_weight`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gross_weight_unit": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `gross_weight_unit`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "packages_count": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `packages_count`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "packages_type": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `packages_type`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "port_of_discharge": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `port_of_discharge`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "port_of_loading": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `port_of_loading`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shipper.nombre": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `shipper.nombre`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vessel": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `vessel`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "voyage_number": {
+          "description": "Fragmento LITERAL del documento (máximo 120 caracteres) donde aparece el valor de `voyage_number`. Si el campo es null, esta evidencia también es null. Copia el texto, no lo parafrasees: se verifica contra el documento y una cita que no existe invalida el campo.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "bl_number",
+        "folio",
+        "codigo_verificacion",
+        "shipper.nombre",
+        "consignee.nombre",
+        "port_of_loading",
+        "port_of_discharge",
+        "vessel",
+        "voyage_number",
+        "eta",
+        "goods_description",
+        "packages_count",
+        "packages_type",
+        "gross_weight",
+        "gross_weight_unit",
+        "containers[].number"
+      ],
+      "type": "object"
     },
     "final_destination": {
       "description": "Valor literal del documento; null si no aparece.",
@@ -551,7 +713,9 @@
     "freight_currency",
     "demurrage_free_days",
     "detention_free_days",
-    "observations"
+    "observations",
+    "evidencia",
+    "campos_no_encontrados"
   ],
   "title": "BillOfLadingExtraido",
   "type": "object"

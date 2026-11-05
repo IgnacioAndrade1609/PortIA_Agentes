@@ -1,0 +1,24 @@
+# Entorno local de Python
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+
+# Documentos y artefactos de prueba
+temp/
+tests/
+*.log
+
+# Cachés de modelos (se montan como volúmenes)
+.cache/
+
+# Control de versiones
+.git/
+.gitignore

@@ -17,9 +17,11 @@ from agente_lector.extraction.llm_extractor import (
     buscar_en_texto,
     cargar_prompt,
     construir_bl,
+    contar_campos_clave_con_valor,
     es_extraccion_vacia,
     extraer_bl,
     extraer_bl_async,
+    verificar_contrato,
 )
 from agente_lector.extraction.schemas import BillOfLadingExtraido, ReviewReason
 
@@ -46,6 +48,43 @@ def _config(**cambios) -> ConfigLLM:
 
 def _respuesta(datos: dict) -> dict:
     return {"choices": [{"message": {"content": json.dumps(datos)}}], "usage": {"prompt_tokens": 10}}
+
+
+#: Respuesta que cumple el contrato completo sobre ``TEXTO_BL``: cada campo clave trae valor
+#: y su cita literal; los tres que no están en el documento se declaran ausentes.
+def _respuesta_con_contrato() -> dict:
+    return {
+        "document_type": "BL",
+        "bl_number": "140021277",
+        "folio": "140021277",
+        "shipper": {"nombre": "SEPAL INVERSIONES GLOBALES SL"},
+        "consignee": {"nombre": "MALL URUBO LOCAL 27"},
+        "port_of_loading": "VALENCIA",
+        "port_of_discharge": "SANTA CRUZ",
+        "vessel": "MSC AINO",
+        "goods_description": "CONTENEDOR NO ESPECIFICADO",
+        "packages_count": "78",
+        "packages_type": "CONTENEDOR NO ESPECIFICADO",
+        "gross_weight": "25541.25",
+        "gross_weight_unit": "KGM",
+        "containers": [{"number": "TGCU 512907.3", "iso_type": "45G0", "seal": "000574"}],
+        "evidencia": {
+            "bl_number": "#BL 140021277",
+            "folio": "FOLIO 140021277",
+            "shipper.nombre": "Embarcador: SEPAL INVERSIONES GLOBALES SL",
+            "consignee.nombre": "Consignatario: MALL URUBO LOCAL 27",
+            "port_of_loading": "Puerto de embarque: VALENCIA (ESVLC)",
+            "port_of_discharge": "Puerto de descarga: SANTA CRUZ (BOSCS)",
+            "vessel": "Naviera: MSC AINO / servicio LINER",
+            "goods_description": "78 CONTENEDOR NO ESPECIFICADO",
+            "packages_count": "Bultos: 78 CONTENEDOR NO ESPECIFICADO",
+            "packages_type": "Bultos: 78 CONTENEDOR NO ESPECIFICADO",
+            "gross_weight": "Peso bruto: 25541.25 KGM",
+            "gross_weight_unit": "Peso bruto: 25541.25 KGM",
+            "containers[].number": "Contenedor: TGCU 512907.3 - 45G0 - SELLO 000574",
+        },
+        "campos_no_encontrados": ["codigo_verificacion", "voyage_number", "eta"],
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -318,23 +357,100 @@ def test_resultado_no_es_un_objeto_json():
 
 
 # ---------------------------------------------------------------------------
+# Contrato de campos clave (evidencia citada + declaración de ausentes)
+# ---------------------------------------------------------------------------
+def test_evidencia_valida_respalda_el_campo_al_maximo():
+    bl = construir_bl(_respuesta_con_contrato(), TEXTO_BL)
+    assert bl.bl_number.confidence == 1.0
+    assert bl.bl_number.evidence[0].text == "#BL 140021277"
+
+
+def test_evidencia_inventada_anula_el_campo():
+    """La cita es la garantía: si no está en el documento, el valor no existe."""
+    datos = _respuesta_con_contrato()
+    datos["evidencia"]["bl_number"] = "fragmento que no aparece en ninguna parte"
+    bl = construir_bl(datos, TEXTO_BL)
+
+    assert bl.bl_number.value == "140021277"  # se conserva para el humano
+    assert bl.bl_number.confidence == 0.0
+    assert bl.bl_number.evidence == []
+    assert any(otro.startswith("bl_number: sin respaldo") for otro in verificar_contrato(bl))
+
+
+def test_contrato_completo_no_genera_errores():
+    bl = construir_bl(_respuesta_con_contrato(), TEXTO_BL)
+    assert verificar_contrato(bl) == []
+    assert bl.review_reasons == []
+    assert set(bl.campos_no_encontrados) == {"codigo_verificacion", "voyage_number", "eta"}
+
+
+def test_campo_clave_ausente_y_no_declarado_es_error():
+    bl = construir_bl({"bl_number": "140021277"}, TEXTO_BL)
+    errores = verificar_contrato(bl)
+    assert any("shipper.nombre: ausente y no declarado" in error for error in errores)
+    assert any("containers[].number" in error for error in errores)
+
+
+def test_campo_clave_con_valor_inexistente_es_error():
+    datos = _respuesta_con_contrato()
+    datos["vessel"] = "BUQUE QUE NO EXISTE"
+    datos["evidencia"]["vessel"] = None  # sin cita: se busca el valor directamente
+    bl = construir_bl(datos, TEXTO_BL)
+    assert any("vessel: sin respaldo verificable" in error for error in verificar_contrato(bl))
+
+
+def test_campo_clave_sin_cita_pero_literal_si_cumple():
+    """Sin cita se acepta la coincidencia exacta: el código ya verificó por su cuenta."""
+    datos = _respuesta_con_contrato()
+    datos["evidencia"]["vessel"] = None
+    bl = construir_bl(datos, TEXTO_BL)
+    assert verificar_contrato(bl) == []
+
+
+def test_declarar_ausente_un_campo_con_valor_es_error():
+    datos = _respuesta_con_contrato()
+    datos["campos_no_encontrados"].append("bl_number")
+    bl = construir_bl(datos, TEXTO_BL)
+    assert any("declarado ausente pero trae valor" in error for error in verificar_contrato(bl))
+
+
+def test_reintento_dirigido_completa_el_contrato():
+    """Primera respuesta incompleta → el reintento la corrige y el BL sale limpio."""
+    cliente = OpenRouterClient(_config(intentos=1))
+    respuestas = [_respuesta({"bl_number": "140021277"}), _respuesta(_respuesta_con_contrato())]
+    cliente._post = lambda payload: respuestas.pop(0)
+
+    bl = extraer_bl(TEXTO_BL, cliente)
+    assert respuestas == []  # se hicieron exactamente dos llamadas
+    assert verificar_contrato(bl) == []
+    assert ReviewReason.MISSING_REQUIRED_FIELD not in bl.review_reasons
+
+
+def test_contrato_irresoluble_marca_revision():
+    cliente = OpenRouterClient(_config(intentos=1))
+    cliente._post = lambda payload: _respuesta({"bl_number": "140021277"})
+
+    bl = extraer_bl(TEXTO_BL, cliente)
+    assert ReviewReason.MISSING_REQUIRED_FIELD in bl.review_reasons
+
+
+def test_contar_campos_clave_con_valor():
+    assert contar_campos_clave_con_valor(BillOfLadingExtraido()) == 0
+    assert contar_campos_clave_con_valor(construir_bl({"bl_number": "140021277"}, TEXTO_BL)) == 1
+    assert contar_campos_clave_con_valor(construir_bl(_respuesta_con_contrato(), TEXTO_BL)) == 13
+
+
+# ---------------------------------------------------------------------------
 # Integración con el cliente y prompt
 # ---------------------------------------------------------------------------
 def test_extraer_bl_completo():
     cliente = OpenRouterClient(_config())
-    cliente._post = lambda payload: _respuesta(
-        {
-            "document_type": "BL",
-            "bl_number": "140021277",
-            "shipping_line": "MSC",
-            "port_of_discharge": "SANTA CRUZ",
-            "containers": [{"number": "TGCU 512907.3", "iso_type": "45G0", "seal": "000574"}],
-        }
-    )
+    cliente._post = lambda payload: _respuesta(_respuesta_con_contrato())
     bl = extraer_bl(TEXTO_BL, cliente)
     assert bl.bl_number.value == "140021277"
     assert bl.containers[0].seal.value == "000574"
     assert bl.review_reasons == []
+    assert verificar_contrato(bl) == []
 
 
 def test_extraer_bl_async_no_bloquea():
@@ -346,11 +462,13 @@ def test_extraer_bl_async_no_bloquea():
 
 def test_prompt_versionado_existe():
     assert RUTA_PROMPT.exists()
-    assert VERSION_PROMPT == "bl_v1"
+    assert VERSION_PROMPT == "bl_v2"
     prompt = cargar_prompt()
     assert "Bill of Lading" in prompt
     assert "null" in prompt
     assert "confidence" in prompt  # le decimos explícitamente que no lo emita
+    assert "campos_no_encontrados" in prompt  # regla de declaración de ausentes
+    assert "evidencia" in prompt  # regla de cita literal
 
 
 def test_config_desde_entorno(monkeypatch):

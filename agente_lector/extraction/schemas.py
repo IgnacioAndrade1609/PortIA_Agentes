@@ -51,7 +51,8 @@ __all__ = [
 ]
 
 #: Versión del contrato de las capas 2 y 3. Sube al cambiar de forma incompatible.
-SCHEMA_VERSION = "1.0.0"
+#: 1.1.0 (2026-11-04): se agrega ``campos_no_encontrados`` al BL (cambio aditivo).
+SCHEMA_VERSION = "1.1.0"
 
 
 # ---------------------------------------------------------------------------
@@ -321,6 +322,16 @@ class BillOfLadingExtraido(BaseModel):
 
     # --- Otros ---
     observations: CampoExtraido = Field(default_factory=CampoExtraido, description="Observaciones o instrucciones especiales.")
+
+    # --- Trazabilidad del contrato ---
+    #: Campos clave que el extractor **declaró** como ausentes. Es lo que permite distinguir
+    #: "el dato no viene en el documento" de "el modelo lo olvidó": sin esta lista, un campo
+    #: en ``null`` es ambiguo y el validador no puede exigir cobertura.
+    campos_no_encontrados: list[str] = Field(
+        default_factory=list,
+        description="Identificadores de los campos clave que no aparecen en el documento.",
+    )
+
     warnings: list[WarningCode] = Field(default_factory=list)
     review_reasons: list[ReviewReason] = Field(default_factory=list)
 

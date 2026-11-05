@@ -39,7 +39,7 @@ from typing import Any, Protocol
 
 import requests
 
-from agente_lector.extraction.llm_schema import esquema_para_llm
+from agente_lector.extraction.llm_schema import CAMPOS_CLAVE, esquema_para_llm
 from agente_lector.extraction.schemas import (
     BillOfLadingExtraido,
     CampoExtraido,
@@ -61,20 +61,32 @@ __all__ = [
     "buscar_en_texto",
     "cargar_prompt",
     "construir_bl",
+    "contar_campos_clave_con_valor",
     "es_extraccion_vacia",
     "extraer_bl",
     "extraer_bl_async",
+    "verificar_contrato",
 ]
 
 logger = logging.getLogger("portia.agente_lector")
 
-RUTA_PROMPT = Path(__file__).resolve().parent / "prompts" / "bl_v1.md"
+RUTA_PROMPT = Path(__file__).resolve().parent / "prompts" / "bl_v2.md"
 
 #: Versión del prompt: viaja en la metadata del resultado.
-VERSION_PROMPT = "bl_v1"
+VERSION_PROMPT = "bl_v2"
+
+#: Largo máximo de la cita que se guarda como evidencia.
+MAX_CARACTERES_EVIDENCIA = 300
+
+#: Nombres de evidencia que corresponden a un contenedor concreto (``containers[i].number``).
+_PATRON_CONTENEDOR = re.compile(r"^containers\[\d+\]\.(\w+)$")
 
 #: Umbral de grounding: por debajo de esto el valor no está respaldado por el documento.
 UMBRAL_GROUNDING = 0.9
+
+#: Para un campo clave se exige coincidencia exacta (1.0) o una cita validada (0.9). Una
+#: coincidencia aproximada basta para un campo secundario, pero no para uno obligatorio.
+UMBRAL_CAMPO_CLAVE = 0.9
 
 #: Códigos HTTP que sí valen un reintento.
 _CODIGOS_TRANSITORIOS = frozenset({408, 409, 425, 429})
@@ -357,8 +369,7 @@ def cargar_prompt(ruta: Path | None = None) -> str:
 def extraer_bl(markdown: str, cliente: LLMClient) -> BillOfLadingExtraido:
     """Llama al LLM y devuelve el BL con evidencia y confianza por campo."""
     inicio = time.perf_counter()
-    datos = cliente.extraer(markdown)
-    bl = construir_bl(datos, markdown)
+    bl = _extraer_con_contrato(markdown, cliente.extraer)
     logger.info(
         "extraccion LLM completada: modelo=%s campos=%d sin_respaldo=%d ms=%d",
         getattr(cliente, "modelo", "?"),
@@ -369,11 +380,12 @@ def extraer_bl(markdown: str, cliente: LLMClient) -> BillOfLadingExtraido:
     return bl
 
 
-async def extraer_bl_async(markdown: str, cliente: OpenRouterClient) -> BillOfLadingExtraido:
+async def extraer_bl_async(markdown: str, cliente: LLMClient) -> BillOfLadingExtraido:
     """Variante async para el consumer de RabbitMQ."""
     inicio = time.perf_counter()
-    datos = await cliente.extraer_async(markdown)
-    bl = construir_bl(datos, markdown)
+    # Puede haber dos llamadas (extracción + reintento dirigido): se ejecuta completo en un
+    # hilo propio para no bloquear el event loop del consumer.
+    bl = await asyncio.to_thread(_extraer_con_contrato, markdown, cliente.extraer)
     logger.info(
         "extraccion LLM completada: modelo=%s campos=%d sin_respaldo=%d ms=%d",
         cliente.modelo,
@@ -382,6 +394,107 @@ async def extraer_bl_async(markdown: str, cliente: OpenRouterClient) -> BillOfLa
         int((time.perf_counter() - inicio) * 1000),
     )
     return bl
+
+
+def _extraer_con_contrato(
+    markdown: str, pedir: Callable[[str], dict]
+) -> BillOfLadingExtraido:
+    """Extrae, verifica el contrato y hace **un** reintento dirigido si no se cumple.
+
+    El reintento no consume presupuesto de red: solo vuelve a preguntar señalando los campos
+    que fallaron, que es lo que rompe el caso típico (el modelo omitió un campo que sí está).
+    """
+    bl = construir_bl(pedir(markdown), markdown)
+    errores = verificar_contrato(bl)
+    if not errores:
+        return bl
+
+    logger.warning(
+        "contrato incompleto (%d campos): %s; reintento dirigido",
+        len(errores),
+        ", ".join(errores[:5]),
+    )
+    try:
+        reintento = construir_bl(pedir(_texto_reintento(markdown, errores)), markdown)
+    except ErrorLLM as exc:
+        logger.warning("el reintento dirigido falló: %s", exc)
+    else:
+        errores_reintento = verificar_contrato(reintento)
+        if len(errores_reintento) < len(errores):
+            bl, errores = reintento, errores_reintento
+
+    if errores:
+        if ReviewReason.MISSING_REQUIRED_FIELD not in bl.review_reasons:
+            bl.review_reasons.append(ReviewReason.MISSING_REQUIRED_FIELD)
+        logger.warning("campos clave sin resolver: %s", ", ".join(errores[:10]))
+    return bl
+
+
+def _texto_reintento(markdown: str, errores: list[str]) -> str:
+    """Documento + aviso del validador (el documento original queda intacto para el grounding)."""
+    detalle = "\n".join(f"- {error}" for error in errores)
+    return (
+        f"{markdown}\n\n---\n\n## AVISO DEL VALIDADOR (no es parte del documento)\n\n"
+        "Tu respuesta anterior no cumplió el contrato en:\n"
+        f"{detalle}\n\n"
+        "Corrige así: para cada campo clave que **sí** aparece en el documento, devuelve el "
+        "valor y copia en `evidencia` el fragmento literal donde lo viste. Para cada campo "
+        "clave que **no** aparece, devuelve `null`, `null` en su evidencia y agrégalo a "
+        "`campos_no_encontrados`. Busca explícitamente cada uno de los campos listados "
+        "antes de responder; no omitas ninguno de los dos bloques."
+    )
+
+
+def verificar_contrato(bl: BillOfLadingExtraido) -> list[str]:
+    """Comprueba que cada campo clave esté **con valor citado** o **declarado ausente**.
+
+    Es el gate que convierte el schema en una garantía: el schema obliga a emitir las claves,
+    pero solo este validador obliga a que cada clave tenga una decisión explícita y respaldada.
+    Devuelve la lista de incumplimientos (vacía si el contrato se cumple).
+    """
+    errores: list[str] = []
+    declarados = set(bl.campos_no_encontrados)
+
+    for clave in CAMPOS_CLAVE:
+        campo = _campo_por_clave(bl, clave)
+        if campo is None or not campo.presente:
+            if clave not in declarados:
+                errores.append(f"{clave}: ausente y no declarado en campos_no_encontrados")
+            continue
+        if clave in declarados:
+            errores.append(f"{clave}: declarado ausente pero trae valor")
+        if not campo.evidence or campo.confidence < UMBRAL_CAMPO_CLAVE:
+            errores.append(f"{clave}: sin respaldo verificable (cita validada o coincidencia exacta)")
+
+    return errores
+
+
+def contar_campos_clave_con_valor(bl: BillOfLadingExtraido) -> int:
+    """Cuántos campos clave traen valor (no cuántos están respaldados).
+
+    Un valor sin respaldo queda con ``confidence = 0`` y dispara ``GROUNDING_FAILED``, así que
+    para el gate de estado basta con mirar si hay valor.
+    """
+    return sum(
+        1
+        for clave in CAMPOS_CLAVE
+        if (campo := _campo_por_clave(bl, clave)) is not None and campo.presente
+    )
+
+
+def _campo_por_clave(bl: BillOfLadingExtraido, clave: str) -> CampoExtraido | None:
+    """Resuelve ``bl_number``, ``shipper.nombre`` o ``containers[].number`` a su campo."""
+    if clave.startswith("containers[]"):
+        if not bl.containers:
+            return None
+        atributo = clave.split(".", 1)[-1]
+        return getattr(bl.containers[0], atributo, None)
+    if "." in clave:
+        parte, subcampo = clave.split(".", 1)
+        contenedor = getattr(bl, parte, None)
+        return getattr(contenedor, subcampo, None) if contenedor is not None else None
+    campo = getattr(bl, clave, None)
+    return campo if isinstance(campo, CampoExtraido) else None
 
 
 def construir_bl(datos: dict, texto: str) -> BillOfLadingExtraido:
@@ -416,25 +529,56 @@ def construir_bl(datos: dict, texto: str) -> BillOfLadingExtraido:
             ContainerData(**{sub: CampoExtraido(value=v) for sub, v in campos.items() if v})
         )
 
-    aplicar_grounding(bl, texto)
+    declarados = datos.get("campos_no_encontrados")
+    if isinstance(declarados, list):
+        bl.campos_no_encontrados = list(dict.fromkeys(
+            clave for clave in declarados if isinstance(clave, str)
+        ))
+
+    citas = datos.get("evidencia")
+    aplicar_grounding(bl, texto, evidencia=citas if isinstance(citas, dict) else None)
     return bl
 
 
-def aplicar_grounding(bl: BillOfLadingExtraido, texto: str) -> list[str]:
+def aplicar_grounding(
+    bl: BillOfLadingExtraido,
+    texto: str,
+    evidencia: dict[str, Any] | None = None,
+) -> list[str]:
     """Marca con confianza y evidencia los campos respaldados por el documento.
 
-    Devuelve los nombres de los campos que **no** se pudieron respaldar (se gregan a
+    Si el modelo citó un fragmento (``evidencia``), **la cita manda**: solo cuenta si el
+    fragmento existe literalmente en el documento y, dentro de él, aparece el valor. Eso
+    convierte la alucinación en un caso imposible de pasar, no en un caso improbable.
+    Sin cita se busca el valor directamente (ruta tolerante para los campos no clave).
+
+    Devuelve los nombres de los campos que **no** se pudieron respaldar (se agregan a
     ``bl.review_reasons``). Nunca modifica el valor: la corrección es de un humano.
     """
+    citas = {
+        clave: cita
+        for clave, cita in (evidencia or {}).items()
+        if isinstance(cita, str) and cita.strip()
+    }
+    cuerpo = _normalizar(texto)
     sin_respaldo: list[str] = []
+
     for nombre, campo in _iterar_campos(bl):
         if not campo.presente:
             continue
-        puntaje, fragmento, exacto = buscar_en_texto(campo.value or "", texto)
+        cita = citas.get(_clave_evidencia(nombre))
+        if cita:
+            puntaje, fragmento, exacto = _verificar_cita(campo.value or "", cita, cuerpo)
+        else:
+            puntaje, fragmento, exacto = buscar_en_texto(campo.value or "", texto)
+
         if puntaje >= UMBRAL_GROUNDING:
-            campo.confidence = 0.9 if exacto else 0.85
+            if cita:
+                campo.confidence = 1.0 if exacto else 0.9
+            else:
+                campo.confidence = 0.9 if exacto else 0.85
             campo.evidence = [
-                Evidence(page=None, text=fragmento, method=EvidenceMethod.LLM)
+                Evidence(page=None, text=fragmento[:MAX_CARACTERES_EVIDENCIA], method=EvidenceMethod.LLM)
             ]
         else:
             campo.confidence = 0.0
@@ -444,6 +588,24 @@ def aplicar_grounding(bl: BillOfLadingExtraido, texto: str) -> list[str]:
     if sin_respaldo and ReviewReason.GROUNDING_FAILED not in bl.review_reasons:
         bl.review_reasons.append(ReviewReason.GROUNDING_FAILED)
     return sin_respaldo
+
+
+def _verificar_cita(valor: str, cita: str, cuerpo: str) -> tuple[float, str, bool]:
+    """Valida la cita del modelo: ``(puntaje, fragmento, exacto)``.
+
+    Una cita que no existe en el documento vale ``0.0``: es la diferencia entre "el modelo
+    encontró el dato" y "el modelo se lo inventó".
+    """
+    if _normalizar(cita) not in cuerpo:
+        return 0.0, "", False
+    puntaje, _fragmento, exacto = buscar_en_texto(valor, cita)
+    return puntaje, cita, exacto
+
+
+def _clave_evidencia(nombre: str) -> str:
+    """``containers[0].number`` → ``containers[].number`` (la evidencia es por tipo, no por ítem)."""
+    coincidencia = _PATRON_CONTENEDOR.match(nombre)
+    return f"containers[].{coincidencia.group(1)}" if coincidencia else nombre
 
 
 def buscar_en_texto(valor: str, texto: str) -> tuple[float, str, bool]:

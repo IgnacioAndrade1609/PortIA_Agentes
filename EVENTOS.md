@@ -77,9 +77,15 @@ Estructura del repo: `shared/` tiene lo transversal (eventos, mensajería, idemp
 }
 ```
 
-`extraction_status` ∈ {`OK`, `NEEDS_REVIEW`, `ERROR`}; `NEEDS_REVIEW` si `confidence < 0.7`.
+`extraction_status` ∈ {`OK`, `NEEDS_REVIEW`, `ERROR`}; `NEEDS_REVIEW` si `confidence < 0.7`,
+si el grounding falló, o si algún campo clave quedó sin respaldo verificable tras el reintento
+dirigido (`review_reasons` incluye `missing_required_field`).
 
 **Nota de contrato:** `extracted_data_raw` viaja siempre, incluso con `extraction_status = "NEEDS_REVIEW"` — permite corregir un campo mal extraído sin perder el resto (CU-COM-05, Ley 21.719).
+
+**Nota operativa:** si el documento no se puede procesar, el agente **no publica nada**: el
+mensaje va a la DLQ y el envío queda para reproceso manual desde RabbitMQ. El Core solo recibe
+`DataExtracted` con datos extraídos.
 
 **Decisión abierta (#4 del maestro):** un `DataExtracted` por contenedor (lo que modela este evento, opción recomendada) vs. uno por BL completo. Confirmar con el equipo antes de dar por cerrado el contrato.
 

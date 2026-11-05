@@ -33,6 +33,7 @@ import requests
 from agente_lector.extraction.llm_extractor import (
     LLMClient,
     OpenRouterClient,
+    contar_campos_clave_con_valor,
     es_extraccion_vacia,
     extraer_bl_async,
 )
@@ -49,6 +50,22 @@ SUFIJOS_IMAGEN = frozenset({".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".
 
 #: Formatos que el pipeline acepta.
 SUFIJOS_SOPORTADOS = SUFIJOS_IMAGEN | {".pdf"}
+
+#: Firmas de archivo (magic bytes) → extensión canónica.
+#: La extensión del nombre miente; el contenido no. ``BM`` se valida además contra los
+#: campos reservados en cero del header BMP, porque es una firma de dos bytes muy débil.
+_FIRMAS: tuple[tuple[bytes, str], ...] = (
+    (b"%PDF-", ".pdf"),
+    (b"\x89PNG\r\n\x1a\n", ".png"),
+    (b"\xff\xd8\xff", ".jpg"),
+    (b"II*\x00", ".tiff"),
+    (b"MM\x00*", ".tiff"),
+)
+
+#: Campos clave que deben tener al menos un valor para que el resultado sea utilizable.
+#: Con 0, el BL no sirve para nada aguas abajo aunque el contrato "cumpla" (el modelo
+#: puede declarar los 16 campos como ausentes y pasar el gate de cobertura).
+MIN_CAMPOS_CLAVE_CON_VALOR = 1
 
 MAX_FILE_MB = float(os.getenv("MAX_FILE_MB", "50"))
 MAX_PAGES = int(os.getenv("MAX_PAGES", "50"))
@@ -122,14 +139,35 @@ async def extraer_documento(
     return eventos
 
 
+def _tipo_por_contenido(datos: bytes) -> str | None:
+    """Extensión deducida de los primeros bytes, o ``None`` si no se reconoce."""
+    for firma, sufijo in _FIRMAS:
+        if datos.startswith(firma):
+            return sufijo
+    if datos[:4] == b"RIFF" and datos[8:12] == b"WEBP":
+        return ".webp"
+    if datos[:2] == b"BM" and len(datos) > 14 and datos[6:10] == b"\x00\x00\x00\x00":
+        return ".bmp"
+    return None
+
+
 def texto_documento(datos: bytes, nombre: str) -> str:
-    """Texto/Markdown del documento (bloqueante: llamar desde ``to_thread``)."""
-    sufijo = Path(nombre).suffix.lower()
+    """Texto/Markdown del documento (bloqueante: llamar desde ``to_thread``).
+
+    El tipo se decide por el **contenido** (magic bytes); la extensión solo se usa cuando la
+    firma no es reconocible. Con la extensión como única fuente, un PDF subido sin sufijo se
+    rechazaba y una imagen renombrada a ``.pdf`` entraba por la rama equivocada.
+    """
+    sufijo = _tipo_por_contenido(datos) or Path(nombre).suffix.lower()
     if sufijo not in SUFIJOS_SOPORTADOS:
         raise ErrorDocumento(f"formato no soportado: {sufijo or '(sin extensión)'}", transitorio=False)
 
+    # Docling recibe el nombre corregido: si el archivo decía ``.pdf`` pero es una imagen, el
+    # nombre original lo haría fallar al inferir el formato.
+    nombre_efectivo = f"{Path(nombre).stem or 'documento'}{sufijo}"
+
     if sufijo in SUFIJOS_IMAGEN:
-        return _markdown_docling(datos, nombre, usar_ocr=True, permitir_imagen=True)
+        return _markdown_docling(datos, nombre_efectivo, usar_ocr=True, permitir_imagen=True)
 
     paginas, nativo = _texto_nativo_pdf(datos)
     if paginas > MAX_PAGES:
@@ -137,7 +175,7 @@ def texto_documento(datos: bytes, nombre: str) -> str:
     if len(nativo) >= UMBRAL_TEXTO_NATIVO * max(1, paginas):
         return nativo
     logger.info("PDF sin texto nativo suficiente (%d chars); se usa Docling + OCR", len(nativo))
-    return _markdown_docling(datos, nombre, usar_ocr=True, permitir_imagen=False)
+    return _markdown_docling(datos, nombre_efectivo, usar_ocr=True, permitir_imagen=False)
 
 
 # ---------------------------------------------------------------------------
@@ -268,10 +306,24 @@ def _idiomas_ocr() -> list[str]:
 # Estado del resultado
 # ---------------------------------------------------------------------------
 def _estado_extraccion(bl: BillOfLadingExtraido) -> ExtractionStatus:
-    """Gate mínimo: sin datos no se publica como OK, y un dato alucinado va a revisión."""
+    """Gate mínimo: sin datos no se publica como OK, y un dato alucinado va a revisión.
+
+    ``MISSING_REQUIRED_FIELD`` lo agrega ``llm_extractor._extraer_con_contrato`` cuando, tras
+    el reintento dirigido, algún campo clave quedó sin valor citado ni declaración de ausencia.
+    """
     if es_extraccion_vacia(bl):
         return ExtractionStatus.ERROR
+    if contar_campos_clave_con_valor(bl) < MIN_CAMPOS_CLAVE_CON_VALOR:
+        # Hay texto suelto pero ningún campo clave: el contrato puede "cumplir" (el modelo
+        # declaró todo como ausente) y aun así el resultado no sirve para el Core.
+        logger.warning(
+            "extracción sin campos clave: %s declarados ausentes",
+            ", ".join(bl.campos_no_encontrados) or "(sin declarar)",
+        )
+        return ExtractionStatus.NEEDS_REVIEW
     if ReviewReason.GROUNDING_FAILED in bl.review_reasons:
+        return ExtractionStatus.NEEDS_REVIEW
+    if ReviewReason.MISSING_REQUIRED_FIELD in bl.review_reasons:
         return ExtractionStatus.NEEDS_REVIEW
     if _confianza_media(bl) < UMBRAL_CONFIANZA:
         return ExtractionStatus.NEEDS_REVIEW

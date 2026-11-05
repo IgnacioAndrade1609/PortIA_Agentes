@@ -1,0 +1,103 @@
+{
+  "document_type": "TRÁNSITO (LCL/LCL)",
+  "bl_number": "ya-1977-61055",
+  "bl_madre": null,
+  "folio": null,
+  "codigo_verificacion": null,
+  "booking_number": null,
+  "bl_type": null,
+  "numero_originales": null,
+  "operacion": null,
+  "shipper": {
+    "nombre": "Grupo Mamani y Peña Ltda.",
+    "direccion": "Esmeralda 2568 Of. 9515 Kaohsiung, Taiwán",
+    "identificador": null,
+    "contacto": null
+  },
+  "consignee": {
+    "nombre": "Valeska Johana Hormazábal Campos EIRL",
+    "direccion": "Pedro de Valdivia 409 Dpto. 808 La Paz, Bolivia",
+    "identificador": "NIT: 273177848",
+    "contacto": null
+  },
+  "notify_party": {
+    "nombre": "Katherine Myriam Iturra Calderón EIRL",
+    "direccion": "Arturo Prat 36 Piso 0 La Paz, Bolivia",
+    "identificador": null,
+    "contacto": null
+  },
+  "also_notify": {
+    "nombre": "Irene Anahí Jiménez Urbina E.I.R.L.",
+    "direccion": "Santiago, Chile",
+    "identificador": "RUT: 35.911.442-7 · [ADU] A-84",
+    "contacto": null
+  },
+  "forwarder_name": null,
+  "agent": null,
+  "signed_by": null,
+  "shipping_line": null,
+  "carrier_scac": null,
+  "vessel": "MV DMo-RTeJ",
+  "voyage_number": "6032N · [GR]",
+  "service_type": null,
+  "port_of_loading": "Hamburg, Alemania",
+  "port_of_discharge": "Arica",
+  "port_of_transshipment": null,
+  "place_of_receipt": null,
+  "place_of_delivery": null,
+  "final_destination": "La Paz",
+  "country_of_origin": null,
+  "place_of_issue": null,
+  "date_of_issue": "01-AUG-2026",
+  "shipped_on_board_date": null,
+  "eta": null,
+  "goods_description": null,
+  "marks_and_numbers": "huGG-PgoM / N° 01",
+  "packages_count": null,
+  "packages_type": null,
+  "gross_weight": null,
+  "gross_weight_unit": "KGM",
+  "volume": null,
+  "volume_unit": null,
+  "containers": [
+    {
+      "number": "QLPU8833228",
+      "iso_type": "45R1",
+      "seal": "7973091"
+    }
+  ],
+  "freight_terms": null,
+  "freight_amount": null,
+  "freight_currency": null,
+  "demurrage_free_days": null,
+  "detention_free_days": null,
+  "observations": "T R A N S I T O A B O L I V I A MERCHANT'S STOWAGE",
+  "evidencia": {
+    "bl_number": "N° BL ya-1977-61055",
+    "folio": null,
+    "codigo_verificacion": null,
+    "shipper.nombre": "Grupo Mamani y Peña Ltda.",
+    "consignee.nombre": "Valeska Johana Hormazábal Campos EIRL",
+    "port_of_loading": "PUERTO EMBARQUE Hamburg, Alemania",
+    "port_of_discharge": "PUERTO DESEMBARQUE Arica",
+    "vessel": "NAVE MV DMo-RTeJ",
+    "voyage_number": "VIAJE 6032N · [GR]",
+    "eta": null,
+    "goods_description": null,
+    "packages_count": null,
+    "packages_type": null,
+    "gross_weight": null,
+    "gross_weight_unit": "KGM",
+    "containers[].number": "CONTENEDOR QLPU8833228"
+  },
+  "campos_no_encontrados": [
+    "codigo_verificacion",
+    "bl_number",
+    "bl_number",
+    "eta",
+    "goods_description",
+    "packages_count",
+    "packages_type",
+    "gross_weight"
+  ]
+}
