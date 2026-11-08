@@ -28,7 +28,7 @@ async def _consultar_terminal(evento: InspectContainerEvent) -> ResultadoScrapin
         logger.info(f"Sin scraper real registrado para terminal={evento.terminal_code}, usando MockStrategy")
         return await _mock.consultar_estado(evento.container_number, evento.terminal_config)
 
-    if _circuit_breaker.esta_abierto(evento.terminal_code):
+    if await _circuit_breaker.esta_abierto(evento.terminal_code):
         logger.warning(f"Circuit breaker abierto para terminal={evento.terminal_code}, usando MockStrategy")
         return await _mock.consultar_estado(evento.container_number, evento.terminal_config)
 
@@ -36,11 +36,11 @@ async def _consultar_terminal(evento: InspectContainerEvent) -> ResultadoScrapin
         resultado = await scraper_real.consultar_estado(evento.container_number, evento.terminal_config)
     except ScraperError:
         logger.warning(f"Scraping real falló para terminal={evento.terminal_code}, usando MockStrategy")
-        _circuit_breaker.registrar_falla(evento.terminal_code)
+        await _circuit_breaker.registrar_falla(evento.terminal_code)
         return await _mock.consultar_estado(evento.container_number, evento.terminal_config)
 
     logger.info(f"Scraping real exitoso para terminal={evento.terminal_code}")
-    _circuit_breaker.registrar_exito(evento.terminal_code)
+    await _circuit_breaker.registrar_exito(evento.terminal_code)
     return resultado
 
 
@@ -61,6 +61,7 @@ async def procesar_inspect_container(evento: InspectContainerEvent, channel: aio
         weather_data=weather_data,
         scraper_source=resultado.scraper_source,
         scraped_at=resultado.scraped_at,
+        estado_contenedor=resultado.estado_contenedor,
     )
 
     await publish_event(channel, "real_status_updated", evento_salida)

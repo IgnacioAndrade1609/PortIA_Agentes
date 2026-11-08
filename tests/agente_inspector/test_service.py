@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from agente_inspector import service
+from agente_inspector.circuit_breaker import CircuitBreaker
 from agente_inspector.scrapers.base import ITerminalScraper, ResultadoScraping, ScraperError
 from shared.events import InspectContainerEvent
 
@@ -15,10 +16,33 @@ EVENTO = InspectContainerEvent(
 )
 
 
+class _RedisFalso:
+    def __init__(self) -> None:
+        self.datos: dict[str, str] = {}
+
+    async def get(self, clave: str):
+        return self.datos.get(clave)
+
+    async def set(self, clave: str, valor: str, *, ex: int | None = None, nx: bool = False):
+        if nx and clave in self.datos:
+            return None
+        self.datos[clave] = valor
+        return True
+
+    async def delete(self, clave: str):
+        self.datos.pop(clave, None)
+        return 1
+
+
 @pytest.fixture(autouse=True)
 def mock_consultar_clima():
     with patch("agente_inspector.service.consultar_clima", new=AsyncMock(return_value=(False, None))):
         yield
+
+
+@pytest.fixture(autouse=True)
+def circuit_breaker_en_memoria(monkeypatch):
+    monkeypatch.setattr(service, "_circuit_breaker", CircuitBreaker(cliente=_RedisFalso()))
 
 
 class _ScraperFalso(ITerminalScraper):
@@ -52,7 +76,7 @@ async def test_usa_scraper_real_cuando_esta_registrado_y_circuito_cerrado():
         scraped_at=datetime.now(timezone.utc),
     )
     service._SCRAPERS_REALES["STI"] = _ScraperFalso(resultado=resultado_real)
-    service._circuit_breaker.registrar_exito("STI")
+    await service._circuit_breaker.registrar_exito("STI")
 
     canal_falso = AsyncMock()
     try:
@@ -74,7 +98,7 @@ async def test_cae_a_mock_y_abre_circuito_tras_3_fallas_del_scraper_real():
             for _ in range(3):
                 await service.procesar_inspect_container(EVENTO, canal_falso)
 
-        assert service._circuit_breaker.esta_abierto("STI") is True
+        assert await service._circuit_breaker.esta_abierto("STI") is True
 
         with patch("agente_inspector.service.publish_event", new=AsyncMock()) as publish:
             await service.procesar_inspect_container(EVENTO, canal_falso)
@@ -83,4 +107,3 @@ async def test_cae_a_mock_y_abre_circuito_tras_3_fallas_del_scraper_real():
         assert evento_publicado.scraper_source == "MOCK"
     finally:
         service._SCRAPERS_REALES.pop("STI", None)
-        service._circuit_breaker.registrar_exito("STI")

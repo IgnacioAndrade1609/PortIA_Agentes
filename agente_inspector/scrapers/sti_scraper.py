@@ -2,7 +2,8 @@ import logging
 import re
 from datetime import datetime, timezone
 
-from playwright.async_api import async_playwright
+from playwright.async_api import Page, async_playwright
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 from agente_inspector.scrapers.base import ITerminalScraper, ResultadoScraping, ScraperError
 
@@ -23,43 +24,63 @@ def limpiar_mensaje_html(mensaje_html: str) -> str:
     return re.sub(r"\s+", " ", sin_tags).strip()
 
 
+def detectar_estado_contenedor(
+    mensaje_recepcion: str, data_recepcion: dict, mensaje_despacho: str, data_despacho: dict
+) -> str | None:
+    # Sin un caso real de contenedor retirado/despachado contra el cual validar, se evita adivinar.
+    return None
+
+
 class StiScraper(ITerminalScraper):
     async def consultar_estado(self, container_number: str, terminal_config: dict) -> ResultadoScraping:
-        tipo_cnt = terminal_config.get("tipo_cnt", "RECEPCION")
         numero_formateado = formatear_numero_container(container_number)
 
         try:
-            data = await self._consultar_en_navegador(tipo_cnt, numero_formateado)
+            data_recepcion, data_despacho = await self._consultar_ambos_modos(numero_formateado)
         except Exception as exc:
             logger.warning(f"StiScraper falló para container={container_number}: {exc}")
             raise ScraperError(str(exc)) from exc
 
-        mensaje = limpiar_mensaje_html(data.get("message", ""))
-        logger.info(f"StiScraper OK para container={container_number}: {mensaje}")
+        mensaje_recepcion = limpiar_mensaje_html(data_recepcion.get("message", ""))
+        mensaje_despacho = limpiar_mensaje_html(data_despacho.get("message", ""))
+        logger.info(
+            f"StiScraper OK para container={container_number}: "
+            f"recepcion='{mensaje_recepcion}' despacho='{mensaje_despacho}'"
+        )
 
         return ResultadoScraping(
-            port_status=mensaje,
+            port_status=mensaje_recepcion,
             real_arrival_date=None,
             scraper_source="SCRAPING",
             scraped_at=datetime.now(timezone.utc),
+            estado_contenedor=detectar_estado_contenedor(
+                mensaje_recepcion, data_recepcion, mensaje_despacho, data_despacho
+            ),
         )
 
-    async def _consultar_en_navegador(self, tipo_cnt: str, numero_formateado: str) -> dict:
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=2), reraise=True)
+    async def _consultar_ambos_modos(self, numero_formateado: str) -> tuple[dict, dict]:
         async with async_playwright() as playwright:
             browser = await playwright.chromium.launch(headless=True)
             try:
                 page = await browser.new_page()
-                await page.goto(STI_URL, timeout=TIMEOUT_MS)
 
-                await page.check(f"#tipo_cnt_{tipo_cnt.lower()}")
-                await page.fill("#contenedor", numero_formateado)
+                data_recepcion = await self._consultar_modo(page, "recepcion", numero_formateado)
+                data_despacho = await self._consultar_modo(page, "despacho", numero_formateado)
 
-                async with page.expect_response(
-                    lambda response: "json_consulta_cnt.php" in response.url, timeout=TIMEOUT_MS
-                ) as response_info:
-                    await page.click("#btn_consultar")
-
-                response = await response_info.value
-                return await response.json()
+                return data_recepcion, data_despacho
             finally:
                 await browser.close()
+
+    async def _consultar_modo(self, page: Page, tipo_cnt: str, numero_formateado: str) -> dict:
+        await page.goto(STI_URL, timeout=TIMEOUT_MS)
+        await page.check(f"#tipo_cnt_{tipo_cnt}")
+        await page.fill("#contenedor", numero_formateado)
+
+        async with page.expect_response(
+            lambda response: "json_consulta_cnt.php" in response.url, timeout=TIMEOUT_MS
+        ) as response_info:
+            await page.click("#btn_consultar")
+
+        response = await response_info.value
+        return await response.json()

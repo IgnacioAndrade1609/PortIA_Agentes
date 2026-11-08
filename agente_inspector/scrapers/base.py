@@ -10,6 +10,7 @@ class ResultadoScraping:
     real_arrival_date: Optional[datetime]
     scraper_source: str
     scraped_at: datetime
+    estado_contenedor: Optional[str] = None
 
 
 class ScraperError(Exception):
