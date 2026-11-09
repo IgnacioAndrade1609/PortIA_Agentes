@@ -1,10 +1,11 @@
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, call, patch
 
 import pytest
 
 from agente_inspector.scrapers.base import ScraperError
 from agente_inspector.scrapers.sti_scraper import (
     StiScraper,
+    detectar_estado_contenedor,
     formatear_numero_container,
     limpiar_mensaje_html,
 )
@@ -17,6 +18,18 @@ def test_formatear_numero_container():
 def test_limpiar_mensaje_html():
     mensaje = "<strong>RECEPCION<br>IKSU 520358-5</strong><br>(26) Fuera de Plazo para esta carga. "
     assert limpiar_mensaje_html(mensaje) == "RECEPCION IKSU 520358-5 (26) Fuera de Plazo para esta carga."
+
+
+def test_detectar_estado_contenedor_con_mensajes_reales_conocidos_no_detecta_nada():
+    recepcion = {"success": "", "message": "...", "codigo": "-1", "datos": [[]]}
+    despacho = {"success": "", "message": "...", "codigo": "-1", "datos": [[]]}
+
+    resultado = detectar_estado_contenedor(
+        "RECEPCION IKSU 520358-5 Fuera de Plazo para esta carga.", recepcion,
+        "DESPACHO IKSU 520358-5 Cnt no tiene Descarga.", despacho,
+    )
+
+    assert resultado is None
 
 
 class _FakeResponse:
@@ -110,18 +123,22 @@ async def test_consultar_estado_devuelve_mensaje_limpio():
     assert resultado.scraper_source == "SCRAPING"
     assert resultado.port_status == "RECEPCION IKSU 520358-5 (26) Fuera de Plazo para esta carga."
     assert resultado.real_arrival_date is None
-    fake_ctx.page.check.assert_awaited_once_with("#tipo_cnt_recepcion")
-    fake_ctx.page.fill.assert_awaited_once_with("#contenedor", "IKSU 520358-5")
+    assert resultado.estado_contenedor is None
     fake_ctx.browser.close.assert_awaited_once()
 
 
-async def test_consultar_estado_usa_tipo_cnt_de_terminal_config():
+async def test_consultar_estado_consulta_siempre_ambos_modos():
     fake_ctx = _FakeAsyncPlaywrightCtx(_FakeResponse({"message": "ok"}))
 
     with patch("agente_inspector.scrapers.sti_scraper.async_playwright", return_value=fake_ctx):
         await StiScraper().consultar_estado("IKSU5203585", {"tipo_cnt": "DESPACHO"})
 
-    fake_ctx.page.check.assert_awaited_once_with("#tipo_cnt_despacho")
+    assert fake_ctx.page.check.await_args_list == [
+        call("#tipo_cnt_recepcion"),
+        call("#tipo_cnt_despacho"),
+    ]
+    assert fake_ctx.page.fill.await_count == 2
+    assert fake_ctx.page.click.await_count == 2
 
 
 async def test_consultar_estado_cuando_falla_navegacion_lanza_scraper_error():

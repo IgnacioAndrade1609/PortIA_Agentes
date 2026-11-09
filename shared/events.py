@@ -69,3 +69,4 @@ class RealStatusUpdatedEvent(BaseModel):
     weather_data: Optional[dict] = None
     scraper_source: str
     scraped_at: datetime
+    estado_contenedor: Optional[str] = None
