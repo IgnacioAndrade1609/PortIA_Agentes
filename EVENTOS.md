@@ -56,7 +56,7 @@ Estructura del repo: `shared/` tiene lo transversal (eventos, mensajería, idemp
 
 - **Publica:** Agente Lector
 - **Consume:** Core (`DataExtractedConsumer`)
-- **Cola:** sin definir todavía del lado Core (la declara MassTransit) — del lado del agente solo se publica con `routing_key="DataExtracted"` hasta coordinar el binding exacto.
+- **Cola:** `data_extracted` (la declara MassTransit con `SnakeCaseEndpointNameFormatter`). El agente publica al *default exchange* con `routing_key="data_extracted"`, que enruta directo a esa cola.
 
 ```json
 {
@@ -93,7 +93,7 @@ mensaje va a la DLQ y el envío queda para reproceso manual desde RabbitMQ. El C
 
 - **Publica:** Agente Inspector
 - **Consume:** Core (`RealStatusUpdatedConsumer`)
-- **Cola:** sin definir todavía del lado Core (la declara MassTransit).
+- **Cola:** `real_status_updated` (la declara MassTransit). El agente publica al *default exchange* con `routing_key="real_status_updated"`.
 
 ```json
 {
@@ -110,10 +110,41 @@ mensaje va a la DLQ y el envío queda para reproceso manual desde RabbitMQ. El C
 
 ---
 
-## Pendiente de coordinar con el Core (MassTransit)
+## Contrato implementado con el Core (MassTransit)
 
-El Core usa MassTransit, que no publica a una cola nombrada simple: genera sus propios exchanges/bindings por tipo de mensaje. El consumer de agentes (aio-pika, cola declarada manualmente) solo recibirá los eventos de Core si el exchange/routing-key calzan exactamente. Antes de probar extremo a extremo con el Core real, confirmar:
-1. Nombre del exchange que MassTransit crea para `ShipmentCreated` e `InspectContainer`.
-2. Si MassTransit espera un exchange por tipo (`fanout`/`topic`) en vez de la cola simple que usa este agente hoy.
+El Core publica los eventos de entrada a los agentes como **exchanges fanout** con el nombre
+snake_case del evento; el agente declara el mismo exchange y bindea su cola (`shared/queues.py`):
 
-Mientras tanto, este sprint se prueba publicando manualmente desde la consola de RabbitMQ (`localhost:15672`).
+| Evento | Dirección | Exchange / cola |
+|---|---|---|
+| `ShipmentCreated` | Core → Lector | exchange fanout `shipment_created`, cola `shipment_created` |
+| `DataExtracted` | Lector → Core | cola `data_extracted` (default exchange) |
+| `InspectContainer` | Core → Inspector | exchange fanout `inspect_container`, cola `inspect_container` |
+| `RealStatusUpdated` | Inspector → Core | cola `real_status_updated` (default exchange) |
+
+MassTransit serializa con `JsonNamingPolicy.SnakeCaseLower` y `UseRawJsonSerializer`, que es
+exactamente el formato que producen los modelos Pydantic de `shared/events.py`.
+
+## Flujo end-to-end
+
+```text
+POST /api/v1/shipments (Core, multipart "files")
+  └─ sube a MinIO y publica ShipmentCreated (una por documento)
+       └─ Agente Lector: descarga el PDF/imagen, extrae el BL y publica DataExtracted
+            └─ Core DataExtractedConsumer: actualiza Documento, crea Container + Hito
+                 └─ publica InspectContainer (requiere terminal de llegada)
+                      └─ Agente Inspector: scraping + clima, publica RealStatusUpdated
+                           └─ Core RealStatusUpdatedConsumer: actualiza Container, clima y riesgo
+                                └─ GET /api/v1/containers alimenta la grilla del front
+```
+
+**Requisitos para que la cadena no se corte:**
+- El documento debe superar el umbral de confianza; si no, queda `PENDIENTE_REVISION` y no se crea `Container`.
+- El contenedor debe tener terminal de llegada (el Core lo infiere desde `port_of_destination`; se siembran terminales de San Antonio, Valparaíso, Arica, Iquique y Antofagasta al iniciar).
+- `scraper_source="MOCK"` no corta el flujo: el Core descarta el estado de puerto pero registra el clima.
+
+### Runners
+
+- `python -m workflows.lector` — solo lector.
+- `python -m workflows.inspector` — solo inspector.
+- `uvicorn main:app` — ambos agentes en un proceso (`main.py`).

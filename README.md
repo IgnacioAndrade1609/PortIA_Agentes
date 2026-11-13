@@ -49,4 +49,38 @@ pip install -r requirements.txt
 | `MAX_PAGES` | `50` | Máximo de páginas por documento |
 | `DOCUMENT_TIMEOUT` | `120` | Presupuesto de tiempo por documento (segundos) |
 
+# Flujo de agentes (lector → Core → inspector)
+
+El contrato de eventos, colas y exchanges está en `EVENTOS.md`. El Core orquesta la
+cadena: publica `ShipmentCreated` y `InspectContainer`, y consume `DataExtracted` y
+`RealStatusUpdated`.
+
+## Levantar los agentes
+
+```powershell
+Copy-Item .env.example .env   # completar LLM_API_KEY
+.\.venv\Scripts\Activate.ps1
+
+# Ambos agentes en un solo proceso
+uvicorn main:app --host 0.0.0.0 --port 8000
+
+# O por separado
+python -m workflows.lector
+python -m workflows.inspector
+```
+
+Requiere RabbitMQ y Redis disponibles en `RABBITMQ_URL` y `REDIS_URL`.
+
+## Orden de la cadena
+
+1. El Core guarda la carga/documento en MinIO y publica un `ShipmentCreated` por documento.
+2. El Lector consume, extrae el BL y publica `DataExtracted`.
+3. El Core inserta `Container` + `Hito` y publica `InspectContainer` (requiere terminal de llegada).
+4. El Inspector hace scraping + clima y publica `RealStatusUpdated`.
+5. El Core actualiza el contenedor y la grilla del front lo lee por `GET /api/v1/containers`.
+
+Si la confianza de la extracción queda bajo `CONFIDENCE_THRESHOLD` (Core usa 0.7), el
+documento pasa a `PENDIENTE_REVISION` y no se crea contenedor: la cadena se detiene ahí
+hasta la corrección manual.
+
 
