@@ -12,7 +12,7 @@ from shared.queues import declarar_colas
 
 setup_logging()
 
-r = redis.Redis(host="localhost", port=6379, decode_responses=True)
+r = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379"), decode_responses=True)
 
 
 @asynccontextmanager
